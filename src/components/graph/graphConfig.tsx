@@ -189,8 +189,9 @@ const GraphConfig = ({
             />
             <div className="">Show Grids</div>
           </div>
+
           <div className="flex flex-col">
-            <div className="">Rock Name color</div>
+            <div className="">Rock name color</div>
             <div className="flex flex-row">
               <input
                 type="color"
@@ -200,13 +201,17 @@ const GraphConfig = ({
               {canvasConfig.rockNameColor}
             </div>
           </div>
-          <div className="flex flex-row">
-            <input
-              type="color"
-              value={canvasConfig.gridColor}
-              onChange={handleGridColor}
-            />
-            {canvasConfig.gridColor}
+
+          <div className="">
+            <div className="">Grid color</div>
+            <div className="flex flex-row">
+              <input
+                type="color"
+                value={canvasConfig.gridColor}
+                onChange={handleGridColor}
+              />
+              {canvasConfig.gridColor}
+            </div>
           </div>
         </div>
         <div className="">
@@ -216,7 +221,7 @@ const GraphConfig = ({
               {themes.map((theme, ind) => (
                 <div
                   key={ind}
-                  className="bg-sky-50 text-gray-400 rounded p-1 m-1"
+                  className="bg-gray-300 text-gray-800 rounded p-1 m-1"
                   onClick={() => handleTheme(theme)}
                 >
                   {theme} theme
