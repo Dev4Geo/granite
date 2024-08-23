@@ -51,8 +51,7 @@ const Graph = () => {
 
   const handleSave = (Q: number, A: number, P: number, symbol: any) => {
     // save to data
-    graph?.plot(Q, A, P, symbol);
-    setData((prev) => [...prev, { Q, A, P, symbol }]);
+    graph?.plot(Q, A, P, symbol); setData((prev) => [...prev, { Q, A, P, symbol }]);
   };
 
   return (
