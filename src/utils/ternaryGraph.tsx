@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { canvasConfigType } from "@/types/types";
 
 type symbolType = "red" | "green" | "blue" | "black";
 
@@ -14,15 +14,17 @@ class TernaryGraph {
   private d5: [number, number, number];
   private d20: [number, number, number];
   private d60: [number, number, number];
-  fontSize: number;
+  private fontSize: number;
+  private config: canvasConfigType;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, config: canvasConfigType) {
+    this.config = config;
     this.canvas = canvas;
     const ratio = window.devicePixelRatio;
     this.ctx = canvas.getContext("2d")!;
     this.offset = 30;
-    this.w = canvas.width;
-    this.h = canvas.height;
+    this.w = config.width;
+    this.h = config.height;
     canvas.width = this.w * ratio;
     canvas.height = this.h * ratio;
     canvas.style.width = `${this.w}px`;
@@ -35,7 +37,7 @@ class TernaryGraph {
     this.d5 = [0, 0, 0];
     this.d20 = [0, 0, 0];
     this.d60 = [0, 0, 0];
-    this.fontSize = 20;
+    this.fontSize = config.fontSize;
     this.ctx.font = `${this.fontSize}px Arial`;
   }
 
@@ -51,30 +53,18 @@ class TernaryGraph {
     this.d5 = this.drawLineParallelQ(5, false);
     this.d20 = d20;
     this.d60 = d60;
-    const colors = [
-      "red",
-      "green",
-      "blue",
-      "yellow",
-      "purple",
-      "orange",
-      "pink",
-      "brown",
-      "gray",
-      "cyan",
-      "violet",
-    ];
-    this.drawQuartzRichArea(colors[0]);
-    this.drawAlkaliFeldsparRhyoliteArea(colors[1]);
-    this.drawRhyoliteArea(colors[2]);
-    this.drawDaciteArea(colors[3]);
-    this.drawQ2Area(colors[4]);
-    this.drawQuartzTrachyteArea(colors[5]);
-    this.drawQuartzLatiteArea(colors[6]);
-    this.drawQ1Area(colors[7]);
-    this.drawTrachyteArea(colors[8]);
-    this.drawLatiteArea(colors[9]);
-    this.drawAndesiteArea(colors[10]);
+    const colors = this.config.colors;
+    this.drawQuartzRichArea(colors['Quartz Rich']);
+    this.drawAlkaliFeldsparRhyoliteArea(colors['Alkali Feldspar Rhyolite']);
+    this.drawRhyoliteArea(colors['Rhyolite']);
+    this.drawDaciteArea(colors['Dacite']);
+    this.drawQ2Area(colors['Q2']);
+    this.drawQuartzTrachyteArea(colors['Quartz Trachyte']);
+    this.drawQuartzLatiteArea(colors['Quartz Latite']);
+    this.drawQ1Area(colors['Q1']);
+    this.drawTrachyteArea(colors['Trachyte']);
+    this.drawLatiteArea(colors['Latite']);
+    this.drawAndesiteArea(colors['Andesite']);
   }
 
   getCenter(lists: number[][]) {
@@ -85,8 +75,11 @@ class TernaryGraph {
 
   fillText(text: string, box: number[][]) {
     let [x, y] = this.getCenter(box);
-    x -= text.length * 5;
-    y += 5;
+    // x -= text.length * 5;
+    // y += 5;
+    // relative to font size
+    x -= text.length * this.fontSize * 0.2;
+    y += this.fontSize * 0.3;
 
     this.ctx.fillText(text, x, y);
   }
@@ -296,7 +289,6 @@ class TernaryGraph {
     this.fillText("Andesite (M<35%)", box);
   }
 
-
   fillColor(color: string, points: number[][]) {
     const oldColor = this.ctx.fillStyle;
     const oldAlpha = this.ctx.globalAlpha;
@@ -375,10 +367,13 @@ class TernaryGraph {
   }
 
   drawEdgePoints() {
-    this.ctx.font = "20px Arial";
+    // set font size using config
+    const oldFont = this.ctx.font;
+    this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
     this.ctx.fillText("Q", this.w / 2 - 7, 20);
     this.ctx.fillText("A", this.offset / 2, this.h - this.offset / 2);
     this.ctx.fillText("P", this.w - this.offset, this.h - this.offset / 2);
+    this.ctx.font = oldFont;
 
     const c = "black";
     this.drawPoint([this.left.x, this.left.y], c);
