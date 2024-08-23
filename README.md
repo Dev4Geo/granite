@@ -9,6 +9,7 @@ Granite is a web application designed to help geologists and earth scientists ea
 - [ ] Deploy to vercel
 - [ ] Support Olivine percentage
 - [ ] Add QAPF and FAP
+- [ ] Support custom symbols
 - [ ] Import and Export to CSV or Excel files.
 - [ ] Export to json.
 - [ ] Export diagrams as PNG.
