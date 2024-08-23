@@ -1,13 +1,14 @@
 # Granite: QAP Diagram Plotting Tool
 
 Granite is a web application designed to help geologists and earth scientists easily plot QAP (Quartz, Alkali feldspar, Plagioclase) diagrams. Whether you're analyzing rock samples or teaching petrology, Granite provides an intuitive interface for plotting and visualizing ternary diagrams. This tool is tailored for accurate and efficient data visualization in the field of geology.
-[Granite](https://dev4geo-granite.vercel.app/)
+Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 
 ## Todos
 
 - [ ] add legend
 - [ ] modernize UI
 - [ ] theme color preview 
+- [ ] link to alternative tools
 - [ ] link to github and main website
 
 ## Features
