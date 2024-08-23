@@ -4,10 +4,11 @@ Granite is a web application designed to help geologists and earth scientists ea
 
 ## Features
 
-- User-friendly interface for plotting QAP diagrams.
-- Supports custom data input for accurate plotting.
-- Interactive visualization with real-time updates.
-- Export diagrams for use in reports or presentations.
+- [ ] Show QAP diagram.
+- [ ] Simple plot QAP diagrams.
+- [ ] Import and Export to CSV or Excel files.
+- [ ] Export to json.
+- [ ] Export diagrams as PNG.
 
 ## Contributing
 
