@@ -20,7 +20,7 @@ function InputBox({ label, name, value, onChange }: inputBoxProps) {
         name={name}
         value={value}
         onChange={onChange}
-        className="border text-gray-600"
+        className="border text-gray-600 w-16"
       />
     </div>
   );
