@@ -6,6 +6,9 @@ Granite is a web application designed to help geologists and earth scientists ea
 
 - [ ] Show QAP diagram.
 - [ ] Simple plot QAP diagrams.
+- [ ] Deploy to vercel
+- [ ] Support Olivine percentage
+- [ ] Add QAPF and FAP
 - [ ] Import and Export to CSV or Excel files.
 - [ ] Export to json.
 - [ ] Export diagrams as PNG.
