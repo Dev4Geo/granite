@@ -34,7 +34,7 @@ const defaultConfig = {
   yAlkali: 0,
   rAlkali: 0,
   ratio: 0,
-  maficMineral: 0,
+  maficMineral: 20,
 };
 
 const Graph = () => {
@@ -134,6 +134,122 @@ const Graph = () => {
   };
   const handleReset = () => {
     window.location.reload();
+  };
+  const handleRAlkali = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setCanvasConfig({
+      ...canvasConfig,
+      rAlkali: value,
+    });
+  };
+  const handleXAlkali = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setCanvasConfig({
+      ...canvasConfig,
+      xAlkali: value,
+    });
+  };
+
+  const handleYAlkali = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setCanvasConfig({
+      ...canvasConfig,
+      yAlkali: value,
+    });
+  };
+
+  const handleRatio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setCanvasConfig({
+      ...canvasConfig,
+      ratio: value,
+    });
+  };
+
+  const handleMaficMineral = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setCanvasConfig({
+      ...canvasConfig,
+      maficMineral: value,
+    });
+  };
+
+  const handleTheme = (themeName: canvasConfigType["theme"]) => {
+    const theme = colorTheme[themeName];
+    setCanvasConfig({
+      ...canvasConfig,
+      colors: {
+        "Quartz Rich": theme[0],
+        "Alkali Feldspar Rhyolite": theme[1],
+        Rhyolite: theme[2],
+        Dacite: theme[3],
+        Q2: theme[4],
+        "Quartz Trachyte": theme[5],
+        "Quartz Latite": theme[6],
+        Andesite: theme[7],
+        Q1: theme[8],
+        Trachyte: theme[9],
+        Latite: theme[10],
+      },
+    });
+  };
+
+  const handleIsShowColors = ()=>{
+    setCanvasConfig({
+      ...canvasConfig,
+      isShowColors: !canvasConfig.isShowColors,
+    });
+  }
+
+  const handleIsShowAxis = ()=>{
+    setCanvasConfig({
+      ...canvasConfig,
+      isShowAxis: !canvasConfig.isShowAxis,
+    });
+  }
+
+  const handleIsShowGrid = ()=>{
+    setCanvasConfig({
+      ...canvasConfig,
+      isShowGrid: !canvasConfig.isShowGrid,
+    });
+  }
+
+  const handleIsShowRockNames = ()=>{
+    setCanvasConfig({
+      ...canvasConfig,
+      isShowRockNames: !canvasConfig.isShowRockNames,
+    });
+  }
+
+  const handleRockNameColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCanvasConfig({
+      ...canvasConfig,
+      rockNameColor: value,
+    });
+  };
+
+  const handleGridColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCanvasConfig({
+      ...canvasConfig,
+      gridColor: value,
+    });
+  };
+
+  const handleIsShowLegend = ()=>{
+    setCanvasConfig({
+      ...canvasConfig,
+      isShowLegend: !canvasConfig.isShowLegend,
+    });
+  }
+
+  const handleIsShowCircle = ()=>{
+    setCanvasConfig({
+      ...canvasConfig,
+      isShowCircle: !canvasConfig.isShowCircle,
+    });
   }
 
   return (
@@ -178,6 +294,20 @@ const Graph = () => {
             handleHeight={handleHeight}
             handleColor={handleColor}
             handleReset={handleReset}
+            handleRAlkali={handleRAlkali}
+            handleXAlkali={handleXAlkali}
+            handleYAlkali={handleYAlkali}
+            handleRatio={handleRatio}
+            handleMaficMineral={handleMaficMineral}
+            handleTheme={handleTheme}
+            handleIsShowColors={handleIsShowColors}
+            handleIsShowAxis={handleIsShowAxis}
+            handleIsShowGrid={handleIsShowGrid}
+            handleIsShowRockNames={handleIsShowRockNames}
+            handleRockNameColor={handleRockNameColor}
+            handleGridColor={handleGridColor}
+            handleIsShowLegend={handleIsShowLegend}
+            handleIsShowCircle={handleIsShowCircle}
           />
         </div>
       </div>

@@ -110,6 +110,15 @@ export type canvasConfigType = {
   xAlkali: number;
   yAlkali: number;
   rAlkali: number;
-  ratio: number;
+  ratio: number; // unused
   maficMineral: number;
+  theme: 'earth'|'forest'|'desert'|'mountain'|'ocean'|'volcanic';
+  isShowColors: boolean;
+  isShowAxis: boolean;
+  isShowGrid: boolean;
+  isShowRockNames: boolean;
+  rockNameColor: string;
+  gridColor: string;
+  isShowLegend: boolean;
+  isShowCircle: boolean;
 };

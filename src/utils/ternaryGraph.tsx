@@ -87,8 +87,9 @@ class TernaryGraph {
   fillRotatedText(text: string, box: number[][]) {
     let [x, y] = this.getCenter(box);
     this.ctx.save();
-    this.ctx.translate(x - this.w / 20, y + this.h / 7);
-    this.ctx.rotate(-Math.PI / 2.8);
+    this.ctx.translate(x - this.w / (20 + this.config.xAlkali), y + this.h / (7 + this.config.yAlkali));
+    const ratio = this.w / this.h;
+    this.ctx.rotate(-Math.PI / (ratio + 1.66 + this.config.rAlkali));
     this.ctx.fillText(text, 0, 0);
     this.ctx.restore();
   }
@@ -286,7 +287,8 @@ class TernaryGraph {
       [d, this.left.y],
     ];
     this.fillColor(color, box);
-    this.fillText("Andesite (M<35%)", box);
+    const text = this.config.maficMineral > 35 ? "Basalt (M>35%)" : "Andesite (M<35%)";
+    this.fillText(text, box);
   }
 
   fillColor(color: string, points: number[][]) {

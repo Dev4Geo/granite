@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { colorTheme } from "@/types/types";
 
 const GraphConfig = ({
   canvasConfig,
@@ -8,6 +9,20 @@ const GraphConfig = ({
   handleHeight,
   handleColor,
   handleReset,
+  handleRAlkali,
+  handleXAlkali,
+  handleYAlkali,
+  handleRatio,
+  handleMaficMineral,
+  handleTheme,
+  handleIsShowColors,
+  handleIsShowAxis,
+  handleIsShowGrid,
+  handleIsShowRockNames,
+  handleRockNameColor,
+  handleGridColor,
+  handleIsShowLegend,
+  handleIsShowCircle,
 }: any) => {
   const [size, setSize] = useState({
     width: canvasConfig.width,
@@ -21,12 +36,18 @@ const GraphConfig = ({
   };
 
   const keys = Object.keys(canvasConfig.colors);
+  const themes = Object.keys(colorTheme);
 
   return (
     <>
       <div className="flex flex-row items-center">
         <div className="text-xl">Config</div>
-        <div className="bg-sky-50 text-gray-400 rounded p-1 m-1" onClick={handleReset}>Reset</div>
+        <div
+          className="bg-sky-50 text-gray-400 rounded p-1 m-1"
+          onClick={handleReset}
+        >
+          Reset
+        </div>
       </div>
       <div className="flex flex-row">
         <div className="flex flex-col">
@@ -78,10 +99,71 @@ const GraphConfig = ({
               onChange={handleFontSizeAxis}
             />
           </div>
+          <div className="">
+            <div className="">Rotate AFR [{canvasConfig.rAlkali}]</div>
+            <input
+              className="slider"
+              type="range"
+              min={-2.26}
+              max={5}
+              step={0.001}
+              value={canvasConfig.rAlkali}
+              onChange={handleRAlkali}
+            />
+          </div>
+          <div className="">
+            <div className="">X AFR [{canvasConfig.xAlkali}]</div>
+            <input
+              className="slider"
+              type="range"
+              min={-17}
+              max={50}
+              step={0.1}
+              value={canvasConfig.xAlkali}
+              onChange={handleXAlkali}
+            />
+          </div>
+          <div className="">
+            <div className="">Y AFR [{canvasConfig.yAlkali}]</div>
+            <input
+              className="slider"
+              type="range"
+              min={-4.5}
+              max={50}
+              step={0.1}
+              value={canvasConfig.yAlkali}
+              onChange={handleYAlkali}
+            />
+          </div>
+          <div className="">
+            <div className="">
+              % Mafic Mineral [{canvasConfig.maficMineral}]
+            </div>
+            <input
+              className="slider"
+              type="range"
+              min={0}
+              max={100}
+              step={0.1}
+              value={canvasConfig.maficMineral}
+              onChange={handleMaficMineral}
+            />
+          </div>
         </div>
         <div className="">
           <div className="">
             <div className="">Colors</div>
+            <div className="">
+              {themes.map((theme, ind) => (
+                <div
+                  key={ind}
+                  className="bg-sky-50 text-gray-400 rounded p-1 m-1"
+                  onClick={() => handleTheme(theme)}
+                >
+                  {theme} theme
+                </div>
+              ))}
+            </div>
             {keys.map((k: string, ind: any) => (
               <div className="" key={ind}>
                 <div className="">{k}</div>
