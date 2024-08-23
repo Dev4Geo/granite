@@ -49,7 +49,7 @@ const GraphConfig = ({
           Reset
         </div>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row space-x-2">
         <div className="flex flex-col">
           <div className="">
             <div className="">Width [{size.width}]</div>
@@ -148,6 +148,65 @@ const GraphConfig = ({
               value={canvasConfig.maficMineral}
               onChange={handleMaficMineral}
             />
+          </div>
+          <div className="flex flex-row space-x-1 items-center justify-start text-center">
+            <input
+              type="checkbox"
+              checked={canvasConfig.isShowRockNames}
+              onChange={handleIsShowRockNames}
+            />
+            <div className="">Show Rock Names</div>
+          </div>
+          <div className="flex flex-row space-x-1 items-center justify-start text-center">
+            <input
+              type="checkbox"
+              checked={canvasConfig.isShowColors}
+              onChange={handleIsShowColors}
+            />
+            <div className="">Show Colors</div>
+          </div>
+          <div className="flex flex-row space-x-1 items-center justify-start text-center">
+            <input
+              type="checkbox"
+              checked={canvasConfig.isShowAxis}
+              onChange={handleIsShowAxis}
+            />
+            <div className="">Show Axis Names</div>
+          </div>
+          <div className="flex flex-row space-x-1 items-center justify-start text-center">
+            <input
+              type="checkbox"
+              checked={canvasConfig.isShowCircle}
+              onChange={handleIsShowCircle}
+            />
+            <div className="">Show Axis Markers</div>
+          </div>
+          <div className="flex flex-row space-x-1 items-center justify-start text-center">
+            <input
+              type="checkbox"
+              checked={canvasConfig.isShowGrid}
+              onChange={handleIsShowGrid}
+            />
+            <div className="">Show Grids</div>
+          </div>
+          <div className="flex flex-col">
+            <div className="">Rock Name color</div>
+            <div className="flex flex-row">
+              <input
+                type="color"
+                value={canvasConfig.rockNameColor}
+                onChange={handleRockNameColor}
+              />
+              {canvasConfig.rockNameColor}
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <input
+              type="color"
+              value={canvasConfig.gridColor}
+              onChange={handleGridColor}
+            />
+            {canvasConfig.gridColor}
           </div>
         </div>
         <div className="">

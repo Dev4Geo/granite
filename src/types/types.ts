@@ -4,6 +4,8 @@ export const colorMap: { [key: string]: string } = {
   B: "blue",
 };
 
+export type themeType = "earth" | "forest" | "desert" | "mountain" | "ocean" | "volcanic";
+
 export const colorTheme = {
   earth: [
     "#7B3F00", // Earth Brown
@@ -112,7 +114,7 @@ export type canvasConfigType = {
   rAlkali: number;
   ratio: number; // unused
   maficMineral: number;
-  theme: 'earth'|'forest'|'desert'|'mountain'|'ocean'|'volcanic';
+  // theme: 'earth'|'forest'|'desert'|'mountain'|'ocean'|'volcanic';
   isShowColors: boolean;
   isShowAxis: boolean;
   isShowGrid: boolean;

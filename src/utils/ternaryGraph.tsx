@@ -44,27 +44,28 @@ class TernaryGraph {
   drawTriangle() {
     this.drawTriangleFrame();
     this.drawEdgePoints();
-    const d20 = this.drawLineParallelQ(20);
-    const d60 = this.drawLineParallelQ(60);
-    this.drawVerticalQ(10, d60);
-    this.drawVerticalQ(35, d20);
-    this.drawVerticalQ(65, d60);
-    this.drawFivePercentLine();
+    const draw = this.config.isShowGrid;
+    const d20 = this.drawLineParallelQ(20, draw);
+    const d60 = this.drawLineParallelQ(60, draw);
+    this.drawVerticalQ(10, d60, draw);
+    this.drawVerticalQ(35, d20, draw);
+    this.drawVerticalQ(65, d60, draw);
+    this.drawFivePercentLine(draw);
     this.d5 = this.drawLineParallelQ(5, false);
     this.d20 = d20;
     this.d60 = d60;
     const colors = this.config.colors;
-    this.drawQuartzRichArea(colors['Quartz Rich']);
-    this.drawAlkaliFeldsparRhyoliteArea(colors['Alkali Feldspar Rhyolite']);
-    this.drawRhyoliteArea(colors['Rhyolite']);
-    this.drawDaciteArea(colors['Dacite']);
-    this.drawQ2Area(colors['Q2']);
-    this.drawQuartzTrachyteArea(colors['Quartz Trachyte']);
-    this.drawQuartzLatiteArea(colors['Quartz Latite']);
-    this.drawQ1Area(colors['Q1']);
-    this.drawTrachyteArea(colors['Trachyte']);
-    this.drawLatiteArea(colors['Latite']);
-    this.drawAndesiteArea(colors['Andesite']);
+    this.drawQuartzRichArea(colors["Quartz Rich"]);
+    this.drawAlkaliFeldsparRhyoliteArea(colors["Alkali Feldspar Rhyolite"]);
+    this.drawRhyoliteArea(colors["Rhyolite"]);
+    this.drawDaciteArea(colors["Dacite"]);
+    this.drawQ2Area(colors["Q2"]);
+    this.drawQuartzTrachyteArea(colors["Quartz Trachyte"]);
+    this.drawQuartzLatiteArea(colors["Quartz Latite"]);
+    this.drawQ1Area(colors["Q1"]);
+    this.drawTrachyteArea(colors["Trachyte"]);
+    this.drawLatiteArea(colors["Latite"]);
+    this.drawAndesiteArea(colors["Andesite"]);
   }
 
   getCenter(lists: number[][]) {
@@ -74,6 +75,9 @@ class TernaryGraph {
   }
 
   fillText(text: string, box: number[][]) {
+    if (!this.config.isShowRockNames) {
+      return;
+    }
     let [x, y] = this.getCenter(box);
     // x -= text.length * 5;
     // y += 5;
@@ -81,15 +85,25 @@ class TernaryGraph {
     x -= text.length * this.fontSize * 0.2;
     y += this.fontSize * 0.3;
 
+    const oldColor = this.ctx.fillStyle;
+    this.ctx.fillStyle = this.config.rockNameColor;
     this.ctx.fillText(text, x, y);
+    this.ctx.fillStyle = oldColor;
   }
 
   fillRotatedText(text: string, box: number[][]) {
+    if (!this.config.isShowRockNames) {
+      return;
+    }
     let [x, y] = this.getCenter(box);
     this.ctx.save();
-    this.ctx.translate(x - this.w / (20 + this.config.xAlkali), y + this.h / (7 + this.config.yAlkali));
+    this.ctx.translate(
+      x - this.w / (20 + this.config.xAlkali),
+      y + this.h / (7 + this.config.yAlkali),
+    );
     const ratio = this.w / this.h;
     this.ctx.rotate(-Math.PI / (ratio + 1.66 + this.config.rAlkali));
+    this.ctx.fillStyle = this.config.rockNameColor;
     this.ctx.fillText(text, 0, 0);
     this.ctx.restore();
   }
@@ -287,11 +301,15 @@ class TernaryGraph {
       [d, this.left.y],
     ];
     this.fillColor(color, box);
-    const text = this.config.maficMineral > 35 ? "Basalt (M>35%)" : "Andesite (M<35%)";
+    const text =
+      this.config.maficMineral > 35 ? "Basalt (M>35%)" : "Andesite (M<35%)";
     this.fillText(text, box);
   }
 
   fillColor(color: string, points: number[][]) {
+    if (!this.config.isShowColors) {
+      return;
+    }
     const oldColor = this.ctx.fillStyle;
     const oldAlpha = this.ctx.globalAlpha;
     this.ctx.fillStyle = color;
@@ -333,54 +351,74 @@ class TernaryGraph {
     return [x, y];
   }
 
-  drawFivePercentLine() {
+  drawFivePercentLine(draw=true) {
+    if (!draw){
+      return
+    }
     const ratio = 5 / 100;
     const y = this.left.y + (this.top_.y - this.left.y) * ratio;
     const xAQ = this.left.x + (this.top_.x - this.left.x) * ratio;
     const xPQ = this.right.x + (this.top_.x - this.right.x) * ratio;
 
     const x65 = xAQ + (xPQ - xAQ) * 0.65;
+
+    const oldColor = this.ctx.strokeStyle;
+    this.ctx.strokeStyle = this.config.gridColor;
     this.ctx.beginPath();
     this.ctx.moveTo(xAQ, y);
     this.ctx.lineTo(x65, y);
     this.ctx.stroke();
+    this.ctx.strokeStyle = oldColor;
   }
 
-  drawVerticalQ(percentageX: number, d: number[]) {
+  drawVerticalQ(percentageX: number, d: number[], draw=true) {
+    if (!draw){
+      return
+    }
     const [y, xa, xb] = d;
     const ratioX = percentageX / 100;
 
     const xAP = this.left.x + (this.right.x - this.left.x) * ratioX;
     const x = xa + (xb - xa) * ratioX;
 
+    const oldColor = this.ctx.strokeStyle;
+    this.ctx.strokeStyle = this.config.gridColor;
     this.ctx.beginPath();
     this.ctx.moveTo(xAP, this.left.y);
     this.ctx.lineTo(x, y);
     this.ctx.stroke();
+    this.ctx.strokeStyle = oldColor;
   }
 
   drawTriangleFrame() {
+    const oldColor = this.ctx.strokeStyle;
+    this.ctx.strokeStyle = this.config.gridColor;
     this.ctx.beginPath();
     this.ctx.moveTo(this.left.x, this.left.y);
     this.ctx.lineTo(this.top_.x, this.top_.y);
     this.ctx.lineTo(this.right.x, this.right.y);
     this.ctx.closePath();
     this.ctx.stroke();
+    this.ctx.strokeStyle = oldColor;
   }
 
   drawEdgePoints() {
     // set font size using config
-    const oldFont = this.ctx.font;
-    this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
-    this.ctx.fillText("Q", this.w / 2 - 7, 20);
-    this.ctx.fillText("A", this.offset / 2, this.h - this.offset / 2);
-    this.ctx.fillText("P", this.w - this.offset, this.h - this.offset / 2);
-    this.ctx.font = oldFont;
+    if (this.config.isShowAxis) {
+      const oldFont = this.ctx.font;
+      this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
+      this.ctx.fillText("Q", this.w / 2 - 7, 20);
+      this.ctx.fillText("A", this.offset / 2, this.h - this.offset / 2);
+      this.ctx.fillText("P", this.w - this.offset, this.h - this.offset / 2);
+      this.ctx.font = oldFont;
+    }
 
-    const c = "black";
-    this.drawPoint([this.left.x, this.left.y], c);
-    this.drawPoint([this.right.x, this.right.y], c);
-    this.drawPoint([this.top_.x, this.top_.y], c);
+    if (this.config.isShowCircle) {
+      const c = "black";
+      this.drawPoint([this.left.x, this.left.y], c);
+      this.drawPoint([this.right.x, this.right.y], c);
+      this.drawPoint([this.top_.x, this.top_.y], c);
+    }
   }
 
   drawLineParallelQ(percentage: number, draw = true): [number, number, number] {
@@ -391,10 +429,13 @@ class TernaryGraph {
     const x1 = xAQ;
     const x2 = xPQ;
     if (draw) {
+      const oldColor = this.ctx.strokeStyle;
+      this.ctx.strokeStyle = this.config.gridColor;
       this.ctx.beginPath();
       this.ctx.moveTo(xAQ, y);
       this.ctx.lineTo(xPQ, y);
       this.ctx.stroke();
+      this.ctx.strokeStyle = oldColor
     }
     return [y, x1, x2];
   }

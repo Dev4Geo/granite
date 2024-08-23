@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import TernaryGraph from "@/utils/ternaryGraph";
 import QAPForm from "@/components/graph/qapForm";
-import { canvasConfigType, colorTheme } from "@/types/types";
+import { canvasConfigType, colorTheme, themeType } from "@/types/types";
 import GraphConfig from "@/components/graph/graphConfig";
 
 type QAP = {
@@ -35,6 +35,14 @@ const defaultConfig = {
   rAlkali: 0,
   ratio: 0,
   maficMineral: 20,
+  isShowColors: true,
+  isShowAxis: true,
+  isShowGrid: true,
+  isShowRockNames: true,
+  rockNameColor: "#000",
+  gridColor: "#000",
+  isShowLegend: true,
+  isShowCircle: true,
 };
 
 const Graph = () => {
@@ -174,7 +182,7 @@ const Graph = () => {
     });
   };
 
-  const handleTheme = (themeName: canvasConfigType["theme"]) => {
+  const handleTheme = (themeName: themeType) => {
     const theme = colorTheme[themeName];
     setCanvasConfig({
       ...canvasConfig,
