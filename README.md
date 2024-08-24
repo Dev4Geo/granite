@@ -7,6 +7,7 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 
 - [ ] add legend
 - [x] modernize UI
+- [x] color preview 
 - [ ] theme color preview 
 - [ ] link to alternative tools
 - [ ] link to github and main website

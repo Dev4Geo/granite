@@ -186,5 +186,5 @@ export type QAP = {
   Q: number;
   A: number;
   P: number;
-  symbol: string;
+  symbol: symbolType;
 };

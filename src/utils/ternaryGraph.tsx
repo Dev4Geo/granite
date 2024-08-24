@@ -346,7 +346,7 @@ class TernaryGraph {
     this.drawPoint(p, symbol);
   }
 
-  drawPoint(point: number[], symbol: symbolType) {
+  drawPoint(point: number[], symbol: string) {
     const [x, y] = point;
     const oldColor = this.ctx.fillStyle;
     this.ctx.beginPath();
@@ -430,7 +430,7 @@ class TernaryGraph {
     }
 
     if (this.config.isShowCircle) {
-      const c = "black";
+      const c = "#505050";
       this.drawPoint([this.left.x, this.left.y], c);
       this.drawPoint([this.right.x, this.right.y], c);
       this.drawPoint([this.top_.x, this.top_.y], c);
