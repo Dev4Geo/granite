@@ -1,6 +1,5 @@
 import { canvasConfigType } from "@/types/types";
 
-type symbolType = "red" | "green" | "blue" | "black";
 
 class TernaryGraph {
   private canvas: HTMLCanvasElement;
@@ -335,7 +334,7 @@ class TernaryGraph {
     const oldColor = this.ctx.fillStyle;
     this.ctx.beginPath();
     this.ctx.fillStyle = symbol;
-    this.ctx.arc(x, y, 5, 0, Math.PI * 2);
+    this.ctx.arc(x, y, 3, 0, Math.PI * 2);
     this.ctx.fill();
     this.ctx.fillStyle = oldColor;
   }

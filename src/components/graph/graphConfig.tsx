@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { colorTheme } from "@/types/types";
+import MySlider from "./mySlider";
+import MyCheckbox from "./myCheckbox";
+import MyColorInput from "./myColorInput";
+import { Button } from "@mui/material";
+import MySettingHeader from "./mySettingHeader";
 
 const GraphConfig = ({
   canvasConfig,
@@ -39,23 +44,59 @@ const GraphConfig = ({
   const themes = Object.keys(colorTheme);
 
   return (
-    <>
-      <div className="flex flex-row items-center">
-        <div className="text-xl">Config</div>
-        <div
-          className="bg-sky-50 text-gray-400 rounded p-1 m-1"
-          onClick={handleReset}
-        >
-          Reset
+    <div className="bg-gray-100 pl-5 py-3 my-3 shadow w-fit">
+      {
+        // settings section
+      }
+      <div className="">
+        {
+          // header
+        }
+        <div className="flex flex-row items-center text-sm ">
+          <MySettingHeader text="Settings" />
+          <Button
+            size="small"
+            className="bg-red-400 text-white rounded m-1 h-5 hover:bg-red-200"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
         </div>
-      </div>
-      <div className="flex flex-row space-x-2">
-        <div className="flex flex-col">
-          <div className="">
-            <div className="">Width [{size.width}]</div>
-            <input
-              className="slider"
-              type="range"
+
+        {
+          // items
+        }
+        <div className="flex flex-row justify-start space-x-10">
+          <div className="flex flex-col">
+            <MyCheckbox
+              label={"Show Rock Names"}
+              checked={canvasConfig.isShowRockNames}
+              onChange={handleIsShowRockNames}
+            />
+            <MyCheckbox
+              label={"Show Colors"}
+              checked={canvasConfig.isShowColors}
+              onChange={handleIsShowColors}
+            />
+            <MyCheckbox
+              label={"Show Axis Names"}
+              checked={canvasConfig.isShowAxis}
+              onChange={handleIsShowAxis}
+            />
+            <MyCheckbox
+              label={"Show Axis Markers"}
+              checked={canvasConfig.isShowCircle}
+              onChange={handleIsShowCircle}
+            />
+            <MyCheckbox
+              label={"Show Grids"}
+              checked={canvasConfig.isShowGrid}
+              onChange={handleIsShowGrid}
+            />
+          </div>
+          <div className="flex flex-col">
+            <MySlider
+              title={`Width [${size.width}]`}
               min={200}
               max={1280}
               step={10}
@@ -63,12 +104,8 @@ const GraphConfig = ({
               onChange={handleTempWidth}
               onMouseUp={handleWidth}
             />
-          </div>
-          <div className="">
-            <div className="">Height [{size.height}]</div>
-            <input
-              className="slider"
-              type="range"
+            <MySlider
+              title={`Height [${size.height}]`}
               min={200}
               max={1280}
               step={10}
@@ -76,58 +113,40 @@ const GraphConfig = ({
               onMouseUp={handleHeight}
               onChange={handleTempHeight}
             />
-          </div>
-          <div className="">
-            <div className="">Font-size [{canvasConfig.fontSize}]</div>
-            <input
-              className="slider"
-              type="range"
+            <MySlider
+              title={`Font-size [${canvasConfig.fontSize}]`}
               min={5}
               max={40}
               value={canvasConfig.fontSize}
               onChange={handleFontSize}
             />
-          </div>
-          <div className="">
-            <div className="">Axis font-size [{canvasConfig.fontSizeAxis}]</div>
-            <input
-              className="slider"
-              type="range"
+            <MySlider
+              title={`Axis font-size [${canvasConfig.fontSizeAxis}]`}
               min={5}
               max={40}
               value={canvasConfig.fontSizeAxis}
               onChange={handleFontSizeAxis}
             />
           </div>
-          <div className="">
-            <div className="">Rotate AFR [{canvasConfig.rAlkali}]</div>
-            <input
-              className="slider"
-              type="range"
+          <div className="flex flex-col">
+            <MySlider
+              title={`Rotate AFR [${canvasConfig.rAlkali}]`}
               min={-2.26}
               max={5}
               step={0.001}
               value={canvasConfig.rAlkali}
               onChange={handleRAlkali}
             />
-          </div>
-          <div className="">
-            <div className="">X AFR [{canvasConfig.xAlkali}]</div>
-            <input
-              className="slider"
-              type="range"
+            <MySlider
+              title={`X AFR [${canvasConfig.xAlkali}]`}
               min={-17}
               max={50}
               step={0.1}
               value={canvasConfig.xAlkali}
               onChange={handleXAlkali}
             />
-          </div>
-          <div className="">
-            <div className="">Y AFR [{canvasConfig.yAlkali}]</div>
-            <input
-              className="slider"
-              type="range"
+            <MySlider
+              title={`Y AFR [${canvasConfig.yAlkali}]`}
               min={-4.5}
               max={50}
               step={0.1}
@@ -135,116 +154,58 @@ const GraphConfig = ({
               onChange={handleYAlkali}
             />
           </div>
-          <div className="">
-            <div className="">
-              % Mafic Mineral [{canvasConfig.maficMineral}]
-            </div>
-            <input
-              className="slider"
-              type="range"
-              min={0}
-              max={100}
-              step={0.1}
-              value={canvasConfig.maficMineral}
-              onChange={handleMaficMineral}
-            />
-          </div>
-          <div className="flex flex-row space-x-1 items-center justify-start text-center">
-            <input
-              type="checkbox"
-              checked={canvasConfig.isShowRockNames}
-              onChange={handleIsShowRockNames}
-            />
-            <div className="">Show Rock Names</div>
-          </div>
-          <div className="flex flex-row space-x-1 items-center justify-start text-center">
-            <input
-              type="checkbox"
-              checked={canvasConfig.isShowColors}
-              onChange={handleIsShowColors}
-            />
-            <div className="">Show Colors</div>
-          </div>
-          <div className="flex flex-row space-x-1 items-center justify-start text-center">
-            <input
-              type="checkbox"
-              checked={canvasConfig.isShowAxis}
-              onChange={handleIsShowAxis}
-            />
-            <div className="">Show Axis Names</div>
-          </div>
-          <div className="flex flex-row space-x-1 items-center justify-start text-center">
-            <input
-              type="checkbox"
-              checked={canvasConfig.isShowCircle}
-              onChange={handleIsShowCircle}
-            />
-            <div className="">Show Axis Markers</div>
-          </div>
-          <div className="flex flex-row space-x-1 items-center justify-start text-center">
-            <input
-              type="checkbox"
-              checked={canvasConfig.isShowGrid}
-              onChange={handleIsShowGrid}
-            />
-            <div className="">Show Grids</div>
-          </div>
-
-          <div className="flex flex-col">
-            <div className="">Rock name color</div>
-            <div className="flex flex-row">
-              <input
-                type="color"
-                value={canvasConfig.rockNameColor}
-                onChange={handleRockNameColor}
-              />
-              {canvasConfig.rockNameColor}
-            </div>
-          </div>
-
-          <div className="">
-            <div className="">Grid color</div>
-            <div className="flex flex-row">
-              <input
-                type="color"
-                value={canvasConfig.gridColor}
-                onChange={handleGridColor}
-              />
-              {canvasConfig.gridColor}
-            </div>
-          </div>
-        </div>
-        <div className="">
-          <div className="">
-            <div className="">Colors</div>
-            <div className="">
-              {themes.map((theme, ind) => (
-                <div
-                  key={ind}
-                  className="bg-gray-300 text-gray-800 rounded p-1 m-1"
-                  onClick={() => handleTheme(theme)}
-                >
-                  {theme} theme
-                </div>
-              ))}
-            </div>
-            {keys.map((k: string, ind: any) => (
-              <div className="" key={ind}>
-                <div className="">{k}</div>
-                <div className="flex flex-row space-x-1">
-                  <input
-                    type="color"
-                    value={canvasConfig.colors[`${k}`]}
-                    onChange={(e) => handleColor(e, k)}
-                  />
-                  <div className="">{canvasConfig.colors[`${k}`]}</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
-    </>
+
+      {
+        // colors section
+      }
+      <div className="">
+        <MySettingHeader text="Colors" />
+        <div className="flex flex-wrap space-x-2">
+          <MyColorInput
+            title="Name"
+            value={canvasConfig.rockNameColor}
+            onChange={handleRockNameColor}
+          />
+          <MyColorInput
+            title="Line"
+            value={canvasConfig.gridColor}
+            onChange={handleGridColor}
+          />
+        </div>
+      </div>
+
+      {
+        // theme section
+      }
+      <div className="">
+        <MySettingHeader text="Themes" />
+        <div className="flex flex-wrap">
+          {themes.map((theme, ind) => (
+            <Button
+              key={ind}
+              onClick={() => handleTheme(theme)}
+              className="bg-gray-200 text-gray-500 shadow rounded p-1 m-1 w-fit text-[0.5rem]"
+              size="small"
+            >
+              {theme} theme
+            </Button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-4">
+          {keys.map((k: string, ind: any) => (
+            <MyColorInput
+              key={ind}
+              title={k}
+              value={canvasConfig.colors[`${k}`]}
+              onChange={(e) => handleColor(e, k)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 export default GraphConfig;

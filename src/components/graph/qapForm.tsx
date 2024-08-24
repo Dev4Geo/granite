@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { colorMap } from "@/types/types";
 import Symbol from "@/components/graph/symbol";
+import { Input } from "@mui/material";
 
 type inputBoxProps = {
   label: string;
@@ -14,13 +15,12 @@ type inputBoxProps = {
 function InputBox({ label, name, value, onChange }: inputBoxProps) {
   return (
     <div>
-      <label htmlFor={name}>{label}</label>
-      <input
-        type="number"
+      <Input type="number"
         name={name}
         value={value}
         onChange={onChange}
-        className="border text-gray-600 w-16"
+        className="border text-gray-500 w-16 text-sm"
+        startAdornment={<div className="text-gray-300 text-sm">{name}:</div>}
       />
     </div>
   );
@@ -49,7 +49,7 @@ export default function QAPForm({ onSave }: any) {
       alert("Recheck the values. Total should be greater than 1.");
       return;
     }
-    
+
     const color = colorMap[symbol];
     onSave(parseFloat(Q), parseFloat(A), parseFloat(P), color);
     setQAP({ Q: 0, A: 0, P: 0 });
@@ -64,10 +64,13 @@ export default function QAPForm({ onSave }: any) {
         <Symbol name="R" onClick={() => handleOnSave("R")} />
         <Symbol name="G" onClick={() => handleOnSave("G")} />
         <Symbol name="B" onClick={() => handleOnSave("B")} />
+        <Symbol name="Custom" onClick={() => {
+          alert("Please wait for the next version.")
+        }} />
       </div>
       {!!total && (
-        <div className="text-gray-400">
-          Total[{total}] QAP%[{Q}_{A}_{P}]
+        <div className="text-gray-400 text-[0.45rem]">
+          Total={total} Q={Q}% A={A}% P={P}%
         </div>
       )}
     </div>

@@ -2,9 +2,12 @@ export const colorMap: { [key: string]: string } = {
   R: "red",
   G: "green",
   B: "blue",
+  "Custom": 'Custom',
 };
 
 export type themeType = "earth" | "forest" | "desert" | "mountain" | "ocean" | "volcanic";
+
+export type symbolType = "red" | "green" | "blue" | "black";
 
 export const colorTheme = {
   earth: [
@@ -123,4 +126,48 @@ export type canvasConfigType = {
   gridColor: string;
   isShowLegend: boolean;
   isShowCircle: boolean;
+};
+
+
+const theme = colorTheme.earth;
+
+export const defaultConfig = {
+  width: 400,
+  height: 400,
+  fontSize: 10,
+  fontSizeAxis: 10,
+  colors: {
+    "Quartz Rich": theme[0],
+    "Alkali Feldspar Rhyolite": theme[1],
+    Rhyolite: theme[2],
+    Dacite: theme[3],
+    Q2: theme[4],
+    "Quartz Trachyte": theme[5],
+    "Quartz Latite": theme[6],
+    Andesite: theme[7],
+    Q1: theme[8],
+    Trachyte: theme[9],
+    Latite: theme[10],
+  },
+  xAlkali: 0,
+  yAlkali: 0,
+  rAlkali: 0,
+  ratio: 0,
+  maficMineral: 20,
+  isShowColors: true,
+  isShowAxis: true,
+  isShowGrid: true,
+  isShowRockNames: true,
+  rockNameColor: "#000",
+  gridColor: "#000",
+  isShowLegend: true,
+  isShowCircle: true,
+};
+
+
+export type QAP = {
+  Q: number;
+  A: number;
+  P: number;
+  symbol: string;
 };

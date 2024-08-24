@@ -1,4 +1,5 @@
 import { colorMap } from "@/types/types";
+import { Button } from "@mui/material";
 
 type symbolProps = {
   name: string;
@@ -8,18 +9,27 @@ type symbolProps = {
 function Symbol({ name, onClick }: symbolProps) {
   const color = colorMap[name];
   const style = [
-    "p-1",
-    "hover:cursor-pointer",
+    "text-white text-sm shadow rounded-none text-center group",
+    "hover:bg-gray-300",
     color == "red" && "bg-red-400",
     color == "green" && "bg-green-400",
     color == "blue" && "bg-blue-400",
+    color == "Custom" && "bg-slate-400",
   ]
     .filter(Boolean)
     .join(" ");
   return (
-    <div className={style} onClick={onClick}>
-      {name}
-    </div>
+    <Button onClick={onClick} className={style}>
+      <div className="group-hover:hidden flex flex-row">
+        {color !== "Custom" && (
+          <div className="text-white text-[0.4rem]">plot</div>
+        )}
+        <div className="opacity-100 hover:opacity-0 text-[0.7rem]">{name}</div>
+      </div>
+      <span className="hidden group-hover:block text-center text-gray-500 text-sm">
+        +
+      </span>
+    </Button>
   );
 }
 
