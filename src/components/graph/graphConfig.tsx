@@ -44,7 +44,7 @@ const GraphConfig = ({
   const themes = Object.keys(colorTheme);
 
   return (
-    <div className="bg-gray-100 pl-5 py-3 my-3 shadow w-fit">
+    <div className="bg-gray-100 pl-5 py-3 my-3 shadow w-fit space-y-3">
       {
         // settings section
       }

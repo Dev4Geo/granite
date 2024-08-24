@@ -1,6 +1,5 @@
 import { canvasConfigType, symbolType } from "@/types/types";
 
-
 class TernaryGraph {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -108,12 +107,17 @@ class TernaryGraph {
   }
 
   drawQuartzRichArea(color: string) {
-    const box = [
+    let box = [
       [this.top_.x, this.top_.y],
       [this.d60[1], this.d60[0]],
       [this.d60[2], this.d60[0]],
     ];
     this.fillColor(color, box);
+     box = [
+      [this.top_.x - 20, this.top_.y],
+      [this.d60[1], this.d60[0]],
+      [this.d60[2], this.d60[0]],
+    ];
     this.fillText("Quartz Rich", box);
   }
 
@@ -199,13 +203,19 @@ class TernaryGraph {
     const c = x1Bottom + (x2Bottom - x1Bottom) * ratioB;
     const d = x1Bottom + (x2Bottom - x1Bottom) * ratioA;
 
-    const box = [
+    let box = [
       [a, yTop],
       [b, yTop],
       [c, yBottom],
       [d, yBottom],
     ];
     this.fillColor(color, box);
+    box = [
+      [a - 25, yTop],
+      [b, yTop],
+      [c, yBottom],
+      [d, yBottom],
+    ];
     this.fillText("Quartz Trachyte", box);
   }
 
@@ -293,13 +303,20 @@ class TernaryGraph {
     const c = this.right.x;
     const d = this.left.x + (this.right.x - this.left.x) * ratioA;
 
-    const box = [
+    let box = [
       [a, yTop],
       [b, yTop],
       [c, this.right.y],
       [d, this.left.y],
     ];
     this.fillColor(color, box);
+
+    box = [
+      [a-50, yTop],
+      [b, yTop],
+      [c, this.right.y],
+      [d, this.left.y],
+    ];
     const text =
       this.config.maficMineral > 35 ? "Basalt (M>35%)" : "Andesite (M<35%)";
     this.fillText(text, box);
@@ -350,9 +367,9 @@ class TernaryGraph {
     return [x, y];
   }
 
-  drawFivePercentLine(draw=true) {
-    if (!draw){
-      return
+  drawFivePercentLine(draw = true) {
+    if (!draw) {
+      return;
     }
     const ratio = 5 / 100;
     const y = this.left.y + (this.top_.y - this.left.y) * ratio;
@@ -370,9 +387,9 @@ class TernaryGraph {
     this.ctx.strokeStyle = oldColor;
   }
 
-  drawVerticalQ(percentageX: number, d: number[], draw=true) {
-    if (!draw){
-      return
+  drawVerticalQ(percentageX: number, d: number[], draw = true) {
+    if (!draw) {
+      return;
     }
     const [y, xa, xb] = d;
     const ratioX = percentageX / 100;
@@ -434,7 +451,7 @@ class TernaryGraph {
       this.ctx.moveTo(xAQ, y);
       this.ctx.lineTo(xPQ, y);
       this.ctx.stroke();
-      this.ctx.strokeStyle = oldColor
+      this.ctx.strokeStyle = oldColor;
     }
     return [y, x1, x2];
   }

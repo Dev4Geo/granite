@@ -2,14 +2,33 @@ export const colorMap: { [key: string]: string } = {
   R: "red",
   G: "green",
   B: "blue",
-  "Custom": 'Custom',
+  Custom: "Custom",
 };
 
-export type themeType = "earth" | "forest" | "desert" | "mountain" | "ocean" | "volcanic";
+export type themeType =
+  | "earth"
+  | "forest"
+  | "desert"
+  | "mountain"
+  | "ocean"
+  | "volcanic";
 
 export type symbolType = "red" | "green" | "blue" | "black";
 
 export const colorTheme = {
+  olivine: [
+    "#FFF",
+    "#A6A6A6",
+    "#D9D9D9",
+    "#63C21B",
+    "#CBF08D",
+    "#C1FF72",
+    "#7ED957",
+    "#236A0A",
+    "#A6A6A6",
+    "#D9D9D9",
+    "#42CA67",
+  ],
   earth: [
     "#7B3F00", // Earth Brown
     "#C19A6B", // Desert Sand
@@ -128,14 +147,13 @@ export type canvasConfigType = {
   isShowCircle: boolean;
 };
 
-
-const theme = colorTheme.earth;
+const theme = colorTheme.olivine;
 
 export const defaultConfig = {
-  width: 400,
-  height: 400,
-  fontSize: 10,
-  fontSizeAxis: 10,
+  width: 520,
+  height: 520,
+  fontSize: 12,
+  fontSizeAxis: 15,
   colors: {
     "Quartz Rich": theme[0],
     "Alkali Feldspar Rhyolite": theme[1],
@@ -159,11 +177,10 @@ export const defaultConfig = {
   isShowGrid: true,
   isShowRockNames: true,
   rockNameColor: "#000",
-  gridColor: "#000",
+  gridColor: "#878787",
   isShowLegend: true,
   isShowCircle: true,
 };
-
 
 export type QAP = {
   Q: number;

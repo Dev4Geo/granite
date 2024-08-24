@@ -10,6 +10,7 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 - [ ] theme color preview 
 - [ ] link to alternative tools
 - [ ] link to github and main website
+- [ ] verify negative number
 
 ## Features
 

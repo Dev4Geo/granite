@@ -14,6 +14,7 @@ import {
 import GraphConfig from "@/components/graph/graphConfig";
 import Record from "@/components/graph/record";
 import { IconButton, Slider } from "@mui/material";
+import Image from "next/image";
 
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -69,7 +70,7 @@ const Graph = () => {
   };
 
   useEffect(() => {
-    draw()
+    draw();
   }, [screenSize, canvasRef, canvasConfig, data]);
 
   const handleSave = (Q: number, A: number, P: number, symbol: any) => {
@@ -248,12 +249,26 @@ const Graph = () => {
     temp.splice(index, 1);
     setData(temp);
   };
+  const topLogoSize = 60;
+  const bottomLogoSize = 30;
 
   return (
     <div className="flex flex-col items-center bg-white h-dvh text-gray-600">
       <div className="text-start mb-5 w-full bg-gray-100 py-5 px-6 shadow">
-        <div className="text-4xl font-bold text-gray-700">Granite</div>
-        <div className="text-sm text-gray-500 ml-1">QAP plotter by Dev4Geo</div>
+        <div className="flex flex-row items-center space-x-2">
+          <Image
+            src={"/stone.png"}
+            alt={""}
+            width={topLogoSize}
+            height={topLogoSize}
+          />
+          <div className="flex flex-col">
+            <div className="text-4xl font-bold text-gray-700">Granite</div>
+            <div className="text-sm text-gray-500 ml-1">
+              QAP plotter by Dev4Geo
+            </div>
+          </div>
+        </div>
       </div>
       <div className=" w-full flex flex-col md:flex-row p-2 space-x-1 mt-3">
         {/* <div className=" text-4xl text-red-600">
@@ -294,9 +309,16 @@ const Graph = () => {
         </div>
         <div className="flex flex-col space-y-1 grow-[2] ">
           <div className="flex flex-col space-y-1  p-1">
-            <div className="flex  flex-row items-center">
-              <div className="text-gray-600">Plotter</div>
+            <div className="flex  flex-row items-end">
+              <Image
+                src={"/monster.png"}
+                alt={""}
+                width={bottomLogoSize}
+                height={bottomLogoSize}
+              />
+              <div className="text-gray-600 ml-2">Plotter</div>
               <IconButton
+                className="mb-[-0.44rem]"
                 onClick={() => {
                   setIsShowSettings((p) => !p);
                 }}
