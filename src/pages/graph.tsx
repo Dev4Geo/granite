@@ -253,7 +253,7 @@ const Graph = () => {
   const bottomLogoSize = 30;
 
   return (
-    <div className="flex flex-col items-center bg-white h-dvh text-gray-600">
+    <div className="flex flex-col items-center bg-white h-full text-gray-600">
       <div className="text-start mb-5 w-full bg-gray-100 py-5 px-6 shadow">
         <div className="flex flex-row items-center space-x-2">
           <Image
@@ -279,13 +279,35 @@ const Graph = () => {
             <div className="">Loading...</div>
           ) : (
             <div className="flex flex-col items-center">
-              <canvas
-                ref={canvasRef}
-                width={screenSize.canvasW}
-                height={screenSize.canvasH}
-                // style={{ border: "1px solid #000" }}
-                className=""
-              />
+              <div className="relative">
+                <canvas
+                  ref={canvasRef}
+                  width={screenSize.canvasW}
+                  height={screenSize.canvasH}
+                  // style={{ border: "1px solid #000" }}
+                  className=""
+                ></canvas>
+                <div className="absolute left-0 top-5 text-gray-700">
+                  <div className="text-base font-bold">IUGS Classification</div>
+                  <div className="text-[0.7rem]">Volcanic/Aphanitic Rocks</div>
+                  <div className="text-[0.7rem]">
+                    2a. Volcanic rocks with quartz
+                  </div>
+                  <div className="flex flex-col space-y-2 py-2 text-[0.6rem]">
+                    <div className="">
+                      <div className="">Q = Quartz</div>
+                      <div className="">A = Alkali Feldspar</div>
+                      <div className="">P = Plagioclase Feldspar</div>
+                    </div>
+                    <div className="">
+                      <div className="">Q1. Alkali feldspar Trachyte</div>
+                      <div className="">
+                        Q2. Quartz Alkali Feldspar Trachyte
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div className="">
                 <div className="flex flex-row space-x-1">
@@ -307,7 +329,7 @@ const Graph = () => {
             </div>
           )}
         </div>
-        <div className="flex flex-col space-y-1 grow-[2] ">
+        <div className="flex flex-col space-y-1 grow-[1] ">
           <div className="flex flex-col space-y-1  p-1">
             <div className="flex  flex-row items-end">
               <Image
@@ -379,6 +401,38 @@ const Graph = () => {
           </div>
         </div>
       </div>
+
+      <footer className="bottom-0 left-0 z-20 w-full p-4 border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 bg-gray-100">
+        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+          © 2023{" "}
+          <a href="https://github.com/Dev4Geo" className="hover:underline">
+            Dev4Geo
+          </a>
+          . All Rights Reserved.
+        </span>
+        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+          <li>
+            <a href="#" className="hover:underline me-4 md:me-6">
+              About
+            </a>
+          </li>
+          <li>
+            <a href="#" className="hover:underline me-4 md:me-6">
+              Privacy Policy
+            </a>
+          </li>
+          <li>
+            <a href="#" className="hover:underline me-4 md:me-6">
+              Licensing
+            </a>
+          </li>
+          <li>
+            <a href="#" className="hover:underline">
+              Contact
+            </a>
+          </li>
+        </ul>
+      </footer>
     </div>
   );
 };

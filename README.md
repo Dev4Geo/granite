@@ -5,9 +5,10 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 
 ## Todos
 
-- [ ] add legend
+- [x] add legend
 - [x] modernize UI
 - [x] color preview 
+- [ ] footer links
 - [ ] theme color preview 
 - [ ] link to alternative tools
 - [ ] link to github and main website
