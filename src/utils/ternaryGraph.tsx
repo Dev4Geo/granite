@@ -1,4 +1,4 @@
-import { canvasConfigType } from "@/types/types";
+import { canvasConfigType, symbolType } from "@/types/types";
 
 
 class TernaryGraph {
