@@ -1,4 +1,4 @@
-import { canvasConfigType, symbolType } from "@/types/types";
+import { canvasConfigType, graphType, symbolType } from "@/types/types";
 
 class TernaryGraph {
   private canvas: HTMLCanvasElement;
@@ -9,19 +9,24 @@ class TernaryGraph {
   private left: { x: number; y: number };
   private right: { x: number; y: number };
   private top_: { x: number; y: number };
+  private bottom_: { x: number; y: number };
   private d5: [number, number, number];
   private d20: [number, number, number];
   private d60: [number, number, number];
   private fontSize: number;
+  private nAxis: number;
   private config: canvasConfigType;
+  private graphType: graphType;
 
   constructor(canvas: HTMLCanvasElement, config: canvasConfigType) {
     this.config = config;
     this.canvas = canvas;
+    this.graphType = config.graphType;
+    this.nAxis = ["vQAPF"].includes(this.graphType) ? 4 : 3;
     const ratio = window.devicePixelRatio;
     this.ctx = canvas.getContext("2d")!;
     this.offset = 30;
-    this.w = config.width;
+    this.w = this.nAxis <= 3 ? config.width : config.width / 1.5;
     this.h = config.height;
     canvas.width = this.w * ratio;
     canvas.height = this.h * ratio;
@@ -29,9 +34,20 @@ class TernaryGraph {
     canvas.style.height = `${this.h}px`;
     this.ctx.scale(ratio, ratio);
 
-    this.left = { x: this.offset, y: this.h - this.offset };
-    this.right = { x: this.w - this.offset, y: this.h - this.offset };
-    this.top_ = { x: this.w / 2, y: this.offset };
+    if (this.nAxis <= 3) {
+      this.left = { x: this.offset, y: this.h - this.offset };
+      this.right = { x: this.w - this.offset, y: this.h - this.offset };
+      this.top_ = { x: this.w / 2, y: this.offset };
+      this.bottom_ = { x: 0, y: 0 };
+    } else {
+      this.left = { x: this.offset, y: (this.h) * 0.5 };
+      this.right = {
+        x: this.w - this.offset,
+        y: (this.h ) * 0.5,
+      };
+      this.top_ = { x: this.w / 2, y: this.offset };
+      this.bottom_ = { x: this.w / 2, y: this.h - this.offset };
+    }
     this.d5 = [0, 0, 0];
     this.d20 = [0, 0, 0];
     this.d60 = [0, 0, 0];
@@ -39,15 +55,20 @@ class TernaryGraph {
     this.ctx.font = `${this.fontSize}px Arial`;
   }
 
+  // main function
   drawTriangle() {
-    this.drawVolcanicQAP();
+    if (this.graphType === "vQAPF") {
+      this.drawVolcanicQAPF();
+    } else if (this.graphType === "vQAP") {
+      this.drawVolcanicQAP();
+    }
   }
-  drawVolcanicQAPF(){
-    this.drawTriangleFrame();
+  drawVolcanicQAPF() {
+    this.drawTriangleFrame(this.left, this.top_, this.right, this.bottom_);
   }
 
   drawVolcanicQAP() {
-    this.drawTriangleFrame();
+    this.drawTriangleFrame(this.left, this.top_, this.right);
     this.drawEdgePoints();
     const draw = this.config.isShowGrid;
     const d20 = this.drawLineParallelQ(20, draw);
@@ -413,13 +434,21 @@ class TernaryGraph {
     this.ctx.strokeStyle = oldColor;
   }
 
-  drawTriangleFrame() {
+  drawTriangleFrame(...lines: { x: number; y: number }[]) {
     const oldColor = this.ctx.strokeStyle;
     this.ctx.strokeStyle = this.config.gridColor;
     this.ctx.beginPath();
-    this.ctx.moveTo(this.left.x, this.left.y);
-    this.ctx.lineTo(this.top_.x, this.top_.y);
-    this.ctx.lineTo(this.right.x, this.right.y);
+    // this.ctx.moveTo(this.left.x, this.left.y);
+    // this.ctx.lineTo(this.top_.x, this.top_.y);
+    // this.ctx.lineTo(this.right.x, this.right.y);
+
+    const first = lines.shift()!;
+    this.ctx.moveTo(first.x, first.y);
+    // foreach
+    lines.forEach((line) => {
+      this.ctx.lineTo(line.x, line.y);
+    });
+
     this.ctx.closePath();
     this.ctx.stroke();
     this.ctx.strokeStyle = oldColor;

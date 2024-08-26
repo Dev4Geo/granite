@@ -148,10 +148,11 @@ export type canvasConfigType = {
   isShowCircle: boolean;
   xLegend: number,
   yLegend: number,
-  nAxis: number,
+  graphType: graphType,
 };
 
 const theme = colorTheme.olivine;
+export type graphType = 'vQAPF'|'vQAP';
 
 export const defaultConfig = {
   width: 520,
@@ -183,11 +184,11 @@ export const defaultConfig = {
   isShowRockNames: true,
   rockNameColor: "#000",
   gridColor: "#878787",
-  isShowLegend: true,
+  isShowLegend: false,
   isShowCircle: true,
   xLegend: -30,
   yLegend: 0,
-  nAxis: 4,
+  graphType: "vQAPF",
 };
 
 export type QAP = {
