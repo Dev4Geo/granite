@@ -40,6 +40,13 @@ class TernaryGraph {
   }
 
   drawTriangle() {
+    this.drawVolcanicQAP();
+  }
+  drawVolcanicQAPF(){
+    this.drawTriangleFrame();
+  }
+
+  drawVolcanicQAP() {
     this.drawTriangleFrame();
     this.drawEdgePoints();
     const draw = this.config.isShowGrid;
@@ -113,7 +120,7 @@ class TernaryGraph {
       [this.d60[2], this.d60[0]],
     ];
     this.fillColor(color, box);
-     box = [
+    box = [
       [this.top_.x - 20, this.top_.y],
       [this.d60[1], this.d60[0]],
       [this.d60[2], this.d60[0]],
@@ -312,7 +319,7 @@ class TernaryGraph {
     this.fillColor(color, box);
 
     box = [
-      [a-50, yTop],
+      [a - 50, yTop],
       [b, yTop],
       [c, this.right.y],
       [d, this.left.y],
@@ -424,8 +431,12 @@ class TernaryGraph {
       const oldFont = this.ctx.font;
       this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
       this.ctx.fillText("Q", this.w / 2 - 7, 20);
-      this.ctx.fillText("A", this.offset / 2.5, this.h - this.offset/2 );
-      this.ctx.fillText("P", this.w - this.offset/1.3, this.h - this.offset / 2);
+      this.ctx.fillText("A", this.offset / 2.5, this.h - this.offset / 2);
+      this.ctx.fillText(
+        "P",
+        this.w - this.offset / 1.3,
+        this.h - this.offset / 2,
+      );
       this.ctx.font = oldFont;
     }
 

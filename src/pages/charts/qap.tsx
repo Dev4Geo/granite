@@ -7,7 +7,6 @@ import {
   canvasConfigType,
   colorTheme,
   defaultConfig,
-  fontSizeLegendScale,
   QAP,
   symbolType,
   themeType,
@@ -17,6 +16,7 @@ import Record from "@/components/graph/record";
 import { IconButton, Slider } from "@mui/material";
 import Image from "next/image";
 import Legend from "@/components/graph/legend";
+import MyMenu from "@/components/shared/myMenu";
 
 const debug = true;
 
@@ -321,26 +321,8 @@ const Graph = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center bg-white h-full text-gray-600 ">
-      {
-        // header
-      }
-      <div className="text-start mb-5 w-full bg-gray-100 py-5 px-6 shadow">
-        <div className="flex flex-row items-center space-x-2">
-          <Image
-            src={"/stone.png"}
-            alt={""}
-            width={topLogoSize}
-            height={topLogoSize}
-          />
-          <div className="flex flex-col">
-            <div className="text-4xl font-bold text-gray-700">Granite</div>
-            <div className="text-sm text-gray-500 ml-1">
-              QAP plotter by Dev4Geo
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col items-center text-gray-600 w-full">
+      <MyMenu current=""/>
 
       {
         // main content; canvas; input form; data
@@ -399,7 +381,7 @@ const Graph = () => {
                 width={bottomLogoSize}
                 height={bottomLogoSize}
               />
-              <div className="text-gray-600 ml-2">Plotter</div>
+              <div className="text-gray-500 font-bold ml-2">Plotter</div>
               <IconButton
                 className="mb-[-0.44rem]"
                 onClick={() => {

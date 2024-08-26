@@ -148,6 +148,7 @@ export type canvasConfigType = {
   isShowCircle: boolean;
   xLegend: number,
   yLegend: number,
+  nAxis: number,
 };
 
 const theme = colorTheme.olivine;
@@ -186,6 +187,7 @@ export const defaultConfig = {
   isShowCircle: true,
   xLegend: -30,
   yLegend: 0,
+  nAxis: 4,
 };
 
 export type QAP = {
