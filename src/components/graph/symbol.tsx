@@ -21,9 +21,6 @@ function Symbol({ name, onClick }: symbolProps) {
   return (
     <Button onClick={onClick} className={style}>
       <div className="group-hover:hidden flex flex-row">
-        {color !== "Custom" && (
-          <div className="text-white text-[0.4rem]">plot</div>
-        )}
         <div className="opacity-100 hover:opacity-0 text-[0.7rem]">{name}</div>
       </div>
       <span className="hidden group-hover:block text-center text-gray-500 text-sm">

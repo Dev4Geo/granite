@@ -28,6 +28,9 @@ const GraphConfig = ({
   handleGridColor,
   handleIsShowLegend,
   handleIsShowCircle,
+  handleFontSizeLegend,
+  handleXLegend,
+  handleYLegend,
 }: any) => {
   const [size, setSize] = useState({
     width: canvasConfig.width,
@@ -66,7 +69,7 @@ const GraphConfig = ({
         {
           // items
         }
-        <div className="flex flex-row justify-start space-x-10">
+        <div className="flex md:flex-row flex-col justify-start md:space-x-10 items-start">
           <div className="flex flex-col">
             <MyCheckbox
               label={"Show Rock Names"}
@@ -93,26 +96,13 @@ const GraphConfig = ({
               checked={canvasConfig.isShowGrid}
               onChange={handleIsShowGrid}
             />
+            <MyCheckbox
+              label={"Show Legend"}
+              checked={canvasConfig.isShowLegend}
+              onChange={handleIsShowLegend}
+            />
           </div>
-          <div className="flex flex-col">
-            <MySlider
-              title={`Width [${size.width}]`}
-              min={200}
-              max={1280}
-              step={10}
-              value={size.width}
-              onChange={handleTempWidth}
-              onMouseUp={handleWidth}
-            />
-            <MySlider
-              title={`Height [${size.height}]`}
-              min={200}
-              max={1280}
-              step={10}
-              value={size.height}
-              onMouseUp={handleHeight}
-              onChange={handleTempHeight}
-            />
+          <div className="flex flex-col pl-3">
             <MySlider
               title={`Font-size [${canvasConfig.fontSize}]`}
               min={5}
@@ -127,8 +117,6 @@ const GraphConfig = ({
               value={canvasConfig.fontSizeAxis}
               onChange={handleFontSizeAxis}
             />
-          </div>
-          <div className="flex flex-col">
             <MySlider
               title={`Rotate AFR [${canvasConfig.rAlkali}]`}
               min={-2.26}
@@ -154,6 +142,54 @@ const GraphConfig = ({
               onChange={handleYAlkali}
             />
           </div>
+          <div className="flex flex-col pl-3">
+            <MySlider
+              title={`Width [${parseInt(size.width)}]`}
+              min={200}
+              max={1280}
+              step={10}
+              value={size.width}
+              onChange={handleTempWidth}
+              onMouseUp={handleWidth}
+            />
+            <MySlider
+              title={`Height [${parseInt(size.height)}]`}
+              min={200}
+              max={1280}
+              step={10}
+              value={size.height}
+              onMouseUp={handleHeight}
+              onChange={handleTempHeight}
+            />
+            {canvasConfig.isShowLegend && (
+              <>
+                <MySlider
+                  title={`Legend size [${canvasConfig.fontSizeLegend}]`}
+                  min={5}
+                  max={15}
+                  step={0.1}
+                  value={canvasConfig.fontSizeLegend}
+                  onChange={handleFontSizeLegend}
+                />
+                <MySlider
+                  title={`X Legend [${canvasConfig.xLegend}]`}
+                  min={-100}
+                  max={500}
+                  step={1}
+                  value={canvasConfig.xLegend}
+                  onChange={handleXLegend}
+                />
+                <MySlider
+                  title={`Y Legend [${canvasConfig.yLegend}]`}
+                  min={-200}
+                  max={300}
+                  step={1}
+                  value={canvasConfig.yLegend}
+                  onChange={handleYLegend}
+                />
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -163,11 +199,13 @@ const GraphConfig = ({
       <div className="">
         <MySettingHeader text="Colors" />
         <div className="flex flex-wrap space-x-2">
-          <MyColorInput
-            title="Name"
-            value={canvasConfig.rockNameColor}
-            onChange={handleRockNameColor}
-          />
+          {canvasConfig.isShowRockNames && (
+            <MyColorInput
+              title="Name"
+              value={canvasConfig.rockNameColor}
+              onChange={handleRockNameColor}
+            />
+          )}
           <MyColorInput
             title="Line"
             value={canvasConfig.gridColor}
@@ -179,32 +217,34 @@ const GraphConfig = ({
       {
         // theme section
       }
-      <div className="">
-        <MySettingHeader text="Themes" />
-        <div className="flex flex-wrap">
-          {themes.map((theme, ind) => (
-            <Button
-              key={ind}
-              onClick={() => handleTheme(theme)}
-              className="bg-gray-200 text-gray-500 shadow rounded p-1 m-1 w-fit text-[0.5rem]"
-              size="small"
-            >
-              {theme} theme
-            </Button>
-          ))}
-        </div>
+      {canvasConfig.isShowColors && (
+        <div className="">
+          <MySettingHeader text="Themes" />
+          <div className="flex flex-wrap">
+            {themes.map((theme, ind) => (
+              <Button
+                key={ind}
+                onClick={() => handleTheme(theme)}
+                className="bg-gray-200 text-gray-500 shadow rounded p-1 m-1 w-fit text-[0.5rem]"
+                size="small"
+              >
+                {theme} theme
+              </Button>
+            ))}
+          </div>
 
-        <div className="grid grid-cols-4">
-          {keys.map((k: string, ind: any) => (
-            <MyColorInput
-              key={ind}
-              title={k}
-              value={canvasConfig.colors[`${k}`]}
-              onChange={(e) => handleColor(e, k)}
-            />
-          ))}
+          <div className="grid grid-cols-4">
+            {keys.map((k: string, ind: any) => (
+              <MyColorInput
+                key={ind}
+                title={k}
+                value={canvasConfig.colors[`${k}`]}
+                onChange={(e) => handleColor(e, k)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -10,6 +10,7 @@ const MyCheckbox = ({ label, checked, onChange }: MyCheckboxProps) => {
   return (
     <div className="flex flex-row items-center">
       <Checkbox
+        color="success"
         checked={checked}
         onChange={onChange}
         size="small"

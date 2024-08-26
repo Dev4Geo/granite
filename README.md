@@ -8,6 +8,9 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 - [x] add legend
 - [x] modernize UI
 - [x] color preview 
+- [x] legend size config
+- [x] fix long color names
+- [ ] menu bar
 - [ ] footer links
 - [ ] theme color preview 
 - [ ] link to alternative tools

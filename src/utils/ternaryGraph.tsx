@@ -424,8 +424,8 @@ class TernaryGraph {
       const oldFont = this.ctx.font;
       this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
       this.ctx.fillText("Q", this.w / 2 - 7, 20);
-      this.ctx.fillText("A", this.offset / 2, this.h - this.offset / 2);
-      this.ctx.fillText("P", this.w - this.offset, this.h - this.offset / 2);
+      this.ctx.fillText("A", this.offset / 2.5, this.h - this.offset/2 );
+      this.ctx.fillText("P", this.w - this.offset/1.3, this.h - this.offset / 2);
       this.ctx.font = oldFont;
     }
 

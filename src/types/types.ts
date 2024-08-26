@@ -117,6 +117,7 @@ export type canvasConfigType = {
   width: number;
   height: number;
   fontSize: number;
+  fontSizeLegend: number;
   fontSizeAxis: number;
   colors: {
     "Quartz Rich": string;
@@ -145,6 +146,8 @@ export type canvasConfigType = {
   gridColor: string;
   isShowLegend: boolean;
   isShowCircle: boolean;
+  xLegend: number,
+  yLegend: number,
 };
 
 const theme = colorTheme.olivine;
@@ -153,6 +156,7 @@ export const defaultConfig = {
   width: 520,
   height: 520,
   fontSize: 12,
+  fontSizeLegend: 9,
   fontSizeAxis: 15,
   colors: {
     "Quartz Rich": theme[0],
@@ -180,6 +184,8 @@ export const defaultConfig = {
   gridColor: "#878787",
   isShowLegend: true,
   isShowCircle: true,
+  xLegend: -30,
+  yLegend: 0,
 };
 
 export type QAP = {

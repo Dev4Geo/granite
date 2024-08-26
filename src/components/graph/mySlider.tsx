@@ -21,7 +21,7 @@ const MySlider = ({
     <div className="">
       <div className="text-[0.7rem] text-gray-500">{title}</div>
       <input
-        className="slider"
+        className="slider accent-green-700"
         type="range"
         min={min}
         max={max}

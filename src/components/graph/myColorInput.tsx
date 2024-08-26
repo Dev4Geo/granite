@@ -5,11 +5,15 @@ type MyColorInputProps = {
 };
 
 const MyColorInput = ({ title, onChange, value }: MyColorInputProps) => {
+  if (title.startsWith("Alkali Feldspar Rhyolite")) {
+     title = "AFR"
+  }
+  title =  title.replace("Quartz", "Q")
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center">
         <input
-          className="slider w-8 h-8"
+          className="slider w-8 h-8 bg-transparent"
           type="color"
           onChange={onChange}
           value={value}
