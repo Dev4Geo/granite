@@ -31,6 +31,8 @@ const GraphConfig = ({
   handleFontSizeLegend,
   handleXLegend,
   handleYLegend,
+  handleIsShowQAP,
+  handleIsShowFAP,
 }: any) => {
   const [size, setSize] = useState({
     width: canvasConfig.width,

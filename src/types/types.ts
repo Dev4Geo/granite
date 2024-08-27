@@ -189,7 +189,7 @@ export const defaultConfig: canvasConfigType = {
   isShowCircle: true,
   xLegend: -30,
   yLegend: 0,
-  graphType: 'vQAPF'
+  graphType: "vQAPF",
 };
 
 export const defaultConfigMobileVQAP = {

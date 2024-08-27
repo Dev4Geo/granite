@@ -9,6 +9,7 @@ import {
   defaultConfig,
   defaultConfigMobileVQAP,
   defaultConfigVQAPF,
+  graphType,
   QAP,
   symbolType,
   themeType,
@@ -19,6 +20,7 @@ import { IconButton, Slider } from "@mui/material";
 import Image from "next/image";
 import Legend from "@/components/graph/legend";
 import MyMenu from "@/components/shared/myMenu";
+import MyButton from "@/components/shared/myButton";
 
 const debug = true;
 
@@ -316,8 +318,8 @@ const Graph = () => {
         ...canvasConfig,
         ...defaultConfigMobileVQAP,
       });
-    } 
-    if (canvasConfig.graphType === 'vQAPF'){
+    }
+    if (canvasConfig.graphType === "vQAPF") {
       setCanvasConfig({
         ...canvasConfig,
         ...defaultConfigVQAPF,
@@ -327,7 +329,7 @@ const Graph = () => {
 
   return (
     <div className="flex flex-col items-center text-gray-600 w-full">
-      <MyMenu current=""/>
+      <MyMenu current="" />
 
       {
         // main content; canvas; input form; data
@@ -395,8 +397,25 @@ const Graph = () => {
               >
                 <SettingsIcon fontSize="small" className="" />
               </IconButton>
+              <MyButton
+                title="QAP"
+                onClick={() => {
+                  setCanvasConfig({
+                    ...canvasConfig,
+                    graphType: "vQAP",
+                  });
+                }}
+              />
+              <MyButton
+                title="QAPF"
+                onClick={() => {
+                  setCanvasConfig({
+                    ...canvasConfig,
+                    graphType: "vQAPF",
+                  });
+                }}
+              />
             </div>
-
             {isShowSettings && (
               <GraphConfig
                 canvasConfig={canvasConfig}
