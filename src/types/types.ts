@@ -155,7 +155,7 @@ const theme = colorTheme.olivine;
 export type graphType = "vQAPF" | "vQAP";
 const debug = true;
 
-export const defaultConfig = {
+export const defaultConfig: canvasConfigType = {
   width: 520,
   height: 520,
   fontSize: debug ? 10 : 12,
@@ -189,7 +189,7 @@ export const defaultConfig = {
   isShowCircle: true,
   xLegend: -30,
   yLegend: 0,
-  graphType: "vQAPF",
+  graphType: 'vQAPF'
 };
 
 export const defaultConfigMobileVQAP = {

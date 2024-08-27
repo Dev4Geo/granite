@@ -69,21 +69,6 @@ class TernaryGraph {
     this.drawTriangleFrame(this.left, this.top_, this.right, this.bottom_);
     const draw = this.config.isShowGrid;
 
-    this.drawEdge4("A", "P", "Q", "F");
-    this.drawLineParallelQ(20, draw);
-    this.drawLineParallelQ(60, draw);
-    const dm10 = this.drawLineParallelQ(10, draw, this.bottom_);
-    const dm60 = this.drawLineParallelQ(60, draw, this.bottom_);
-    const dm90 = this.drawLineParallelQ(90, draw, this.bottom_);
-    this.drawLineParallelQ(0, false, this.bottom_);
-    this.drawVerticalQ(10, dm60, draw);
-    this.drawVerticalQ(50, dm90, draw, dm10);
-    this.drawVerticalQ(90, dm60, draw, dm10);
-    this.drawVerticalQ(35, dm10, draw);
-    this.drawVerticalQ(65, dm10, draw);
-    this.drawVolcanicQAP(false);
-    this.drawFrameBottom(0, 65);
-
     // mafic 35
     const andesite =
       this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
@@ -130,6 +115,20 @@ class TernaryGraph {
     data.forEach((d: any) => {
       this.doFill.apply(this, d);
     });
+    this.drawEdge4("A", "P", "Q", "F");
+    this.drawLineParallelQ(20, draw, this.top_, "20");
+    this.drawLineParallelQ(60, draw, this.top_, "60");
+    const dm10 = this.drawLineParallelQ(10, draw, this.bottom_, "10");
+    const dm60 = this.drawLineParallelQ(60, draw, this.bottom_, "60");
+    const dm90 = this.drawLineParallelQ(90, draw, this.bottom_, "90");
+    this.drawLineParallelQ(0, false, this.bottom_);
+    this.drawVerticalQ(10, dm60, draw, null, "10", "b", 27, 39);
+    this.drawVerticalQ(50, dm90, draw, dm10, "50", "b", -8, 7);
+    this.drawVerticalQ(90, dm60, draw, dm10, "90", "b", -13, 7);
+    this.drawVerticalQ(35, dm10, draw);
+    this.drawVerticalQ(65, dm10, draw);
+    this.drawVolcanicQAP(false);
+    this.drawFrameBottom(0, 65);
   }
 
   findCenter(box: number[][]) {
@@ -150,10 +149,11 @@ class TernaryGraph {
   drawTextWithLineBreaks(
     text: string,
     box: number[][],
-    offsetX: number,
-    offsetY: number,
-    rotatedText: number,
+    offsetX: number = 0,
+    offsetY: number = 0,
+    rotatedText: number = 0,
     textAlign: CanvasTextAlign = "center",
+    fontSize: number = this.config.fontSize,
   ) {
     const lineHeight = this.config.fontSize * 1.2;
     const ctx = this.ctx;
@@ -162,7 +162,7 @@ class TernaryGraph {
     centerY += this.config.fontSize * 0.3 + offsetY;
     const lines = text.split("\n");
     const startY = centerY - (lines.length / 2) * lineHeight + lineHeight / 2;
-    ctx.font = `${this.fontSize}px Arial`;
+    ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = textAlign;
     lines.forEach((line, index) => {
       const oldColor = this.ctx.fillStyle;
@@ -181,21 +181,6 @@ class TernaryGraph {
   }
 
   drawVolcanicQAP(drawFrame = true) {
-    if (drawFrame) {
-      this.drawTriangleFrame(this.left, this.top_, this.right);
-      this.drawEdgePoints();
-    }
-    const draw = this.config.isShowGrid;
-    const d20 = this.drawLineParallelQ(20, draw);
-    const d60 = this.drawLineParallelQ(60, draw);
-    this.drawVerticalQ(10, d60, draw);
-    this.drawVerticalQ(35, d20, draw);
-    this.drawVerticalQ(65, d60, draw);
-
-    this.drawFivePercentLine(draw);
-    this.d5 = this.drawLineParallelQ(5, false);
-    this.d20 = d20;
-    this.d60 = d60;
     const colors = this.config.colors;
     const data = [
       [
@@ -262,6 +247,21 @@ class TernaryGraph {
         this.doFill.apply(this, d);
       });
     }
+    if (drawFrame) {
+      this.drawTriangleFrame(this.left, this.top_, this.right);
+      this.drawEdgePoints();
+    }
+    const draw = this.config.isShowGrid;
+    const d20 = this.drawLineParallelQ(20, draw);
+    const d60 = this.drawLineParallelQ(60, draw);
+    this.drawVerticalQ(10, d60, draw, null, "10", "b", 44,-69);
+    this.drawVerticalQ(35, d20, draw, null, "35", "a", 0,-5);
+    this.drawVerticalQ(65, d60, draw, null, "65", "b", -21,-69);
+
+    this.drawFivePercentLine(draw);
+    this.d5 = this.drawLineParallelQ(5, false);
+    this.d20 = d20;
+    this.d60 = d60;
   }
 
   getCenter(lists: number[][]) {
@@ -387,6 +387,10 @@ class TernaryGraph {
     d: line,
     draw = true,
     s: line | null = null,
+    text: string = "",
+    textPos: "a" | "b" = "a",
+    textOffestX: number = 0,
+    textOffsetY: number = 0,
   ) {
     if (!draw) {
       return;
@@ -413,6 +417,9 @@ class TernaryGraph {
     this.ctx.lineTo(x, y);
     this.ctx.stroke();
     this.ctx.strokeStyle = oldColor;
+
+    const pos = textPos === "a" ? [x, y] : [xAP, ys];
+    this.drawTextWithLineBreaks(text, [pos], textOffestX, textOffsetY);
   }
 
   drawTriangleFrame(...lines: { x: number; y: number }[]) {
@@ -472,6 +479,7 @@ class TernaryGraph {
         0,
         0,
         "center",
+        this.config.fontSizeAxis,
       );
       this.drawTextWithLineBreaks(
         bottom,
@@ -483,6 +491,8 @@ class TernaryGraph {
         0,
         0,
         "center",
+
+        this.config.fontSizeAxis,
       );
       this.drawTextWithLineBreaks(
         left,
@@ -494,6 +504,7 @@ class TernaryGraph {
         0,
         0,
         "center",
+        this.config.fontSizeAxis,
       );
       this.drawTextWithLineBreaks(
         right,
@@ -505,6 +516,7 @@ class TernaryGraph {
         0,
         0,
         "center",
+        this.config.fontSizeAxis,
       );
       this.ctx.font = oldFont;
     }
@@ -522,6 +534,7 @@ class TernaryGraph {
     percentage: number,
     draw = true,
     top: { x: number; y: number } = this.top_,
+    axisLabel: string = "",
   ): [number, number, number] {
     const ratio = percentage / 100;
     const y = this.left.y + (top.y - this.left.y) * ratio;
@@ -538,6 +551,10 @@ class TernaryGraph {
       this.ctx.stroke();
       this.ctx.strokeStyle = oldColor;
     }
+    this.drawTextWithLineBreaks(axisLabel, [
+      [xAQ, y],
+      [xAQ - this.offset - 2, y],
+    ]);
     return [y, x1, x2];
   }
 
