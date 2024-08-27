@@ -146,18 +146,19 @@ export type canvasConfigType = {
   gridColor: string;
   isShowLegend: boolean;
   isShowCircle: boolean;
-  xLegend: number,
-  yLegend: number,
-  graphType: graphType,
+  xLegend: number;
+  yLegend: number;
+  graphType: graphType;
 };
 
 const theme = colorTheme.olivine;
-export type graphType = 'vQAPF'|'vQAP';
+export type graphType = "vQAPF" | "vQAP";
+const debug = true;
 
 export const defaultConfig = {
   width: 520,
   height: 520,
-  fontSize: 12,
+  fontSize: debug ? 10 : 12,
   fontSizeLegend: 9,
   fontSizeAxis: 15,
   colors: {
@@ -182,13 +183,25 @@ export const defaultConfig = {
   isShowAxis: true,
   isShowGrid: true,
   isShowRockNames: true,
-  rockNameColor: "#000",
+  rockNameColor: "#303030",
   gridColor: "#878787",
   isShowLegend: false,
   isShowCircle: true,
   xLegend: -30,
   yLegend: 0,
   graphType: "vQAPF",
+};
+
+export const defaultConfigMobileVQAP = {
+  fontSizeLegend: 6,
+  xLegend: -35,
+  yLegend: -30,
+};
+
+export const defaultConfigVQAPF = {
+  width: 700,
+  height: 700,
+  fontSize: 11,
 };
 
 export type QAP = {

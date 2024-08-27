@@ -1,5 +1,7 @@
 import { canvasConfigType, graphType, symbolType } from "@/types/types";
 
+type line = [number, number, number];
+
 class TernaryGraph {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -40,10 +42,10 @@ class TernaryGraph {
       this.top_ = { x: this.w / 2, y: this.offset };
       this.bottom_ = { x: 0, y: 0 };
     } else {
-      this.left = { x: this.offset, y: (this.h) * 0.5 };
+      this.left = { x: this.offset, y: this.h * 0.5 };
       this.right = {
         x: this.w - this.offset,
-        y: (this.h ) * 0.5,
+        y: this.h * 0.5,
       };
       this.top_ = { x: this.w / 2, y: this.offset };
       this.bottom_ = { x: this.w / 2, y: this.h - this.offset };
@@ -65,33 +67,201 @@ class TernaryGraph {
   }
   drawVolcanicQAPF() {
     this.drawTriangleFrame(this.left, this.top_, this.right, this.bottom_);
+    const draw = this.config.isShowGrid;
+
+    this.drawEdge4("A", "P", "Q", "F");
+    this.drawLineParallelQ(20, draw);
+    this.drawLineParallelQ(60, draw);
+    const dm10 = this.drawLineParallelQ(10, draw, this.bottom_);
+    const dm60 = this.drawLineParallelQ(60, draw, this.bottom_);
+    const dm90 = this.drawLineParallelQ(90, draw, this.bottom_);
+    this.drawLineParallelQ(0, false, this.bottom_);
+    this.drawVerticalQ(10, dm60, draw);
+    this.drawVerticalQ(50, dm90, draw, dm10);
+    this.drawVerticalQ(90, dm60, draw, dm10);
+    this.drawVerticalQ(35, dm10, draw);
+    this.drawVerticalQ(65, dm10, draw);
+    this.drawVolcanicQAP(false);
+    this.drawFrameBottom(0, 65);
+
+    // mafic 35
+    const andesite =
+      this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
+    const andesiteColor = "#f0A1c0";
+    const data = [
+      [0, 10, 0, 10, "#f011f0", "F1", 0, 0],
+      [10, 35, 0, 10, "#f0A1f0", "Foid-Bearing\nTrachyte", 0, 0],
+      [35, 65, 0, 10, "#a0A1f0", "Foid-Bearing\nLatite", 0, 0],
+      [65, 100, 0, 10, andesiteColor, "", 0, 0],
+      [65, 100, 0, 20, andesiteColor, andesite, 7, 18, this.top_],
+      [0, 10, 10, 60, "#a011f0", "Phonolite", -2, 0, this.bottom_, 1.02],
+      [10, 50, 10, 60, "#a0A1f0", "Tephritic\nPhonolite", 0, 0],
+      [50, 90, 10, 60, "#c0A1c0", "Phonolitic\nBasanite", 0, 0],
+      [90, 100, 10, 60, "#a0A1c0", "Basanite", 2, 0, this.bottom_, -1.0],
+      [
+        0,
+        50,
+        60,
+        90,
+        "#a0A1c0",
+        "Phonlitic\nFoidite",
+        10,
+        -12,
+        this.bottom_,
+        0,
+        "end",
+      ],
+      [
+        50,
+        100,
+        60,
+        90,
+        "#f0A1c0",
+        "Basanitic\nFoidite",
+        -10,
+        -12,
+        this.bottom_,
+        0,
+        "start",
+      ],
+      [0, 100, 90, 100, "#f0A1c0", "F2", 0, 0],
+    ];
+
+    data.forEach((d: any) => {
+      this.doFill.apply(this, d);
+    });
   }
 
-  drawVolcanicQAP() {
-    this.drawTriangleFrame(this.left, this.top_, this.right);
-    this.drawEdgePoints();
+  findCenter(box: number[][]) {
+    let xSum = 0;
+    let ySum = 0;
+
+    box.forEach(([x, y]) => {
+      xSum += x;
+      ySum += y;
+    });
+
+    const centerX = xSum / box.length;
+    const centerY = ySum / box.length;
+
+    return [centerX, centerY];
+  }
+
+  drawTextWithLineBreaks(
+    text: string,
+    box: number[][],
+    offsetX: number,
+    offsetY: number,
+    rotatedText: number,
+    textAlign: CanvasTextAlign = "center",
+  ) {
+    const lineHeight = this.config.fontSize * 1.2;
+    const ctx = this.ctx;
+    let [centerX, centerY] = this.findCenter(box);
+    centerX += offsetX;
+    centerY += this.config.fontSize * 0.3 + offsetY;
+    const lines = text.split("\n");
+    const startY = centerY - (lines.length / 2) * lineHeight + lineHeight / 2;
+    ctx.font = `${this.fontSize}px Arial`;
+    ctx.textAlign = textAlign;
+    lines.forEach((line, index) => {
+      const oldColor = this.ctx.fillStyle;
+      ctx.fillStyle = this.config.rockNameColor;
+      if (rotatedText !== 0) {
+        ctx.save();
+        ctx.translate(centerX, startY + index * lineHeight);
+        ctx.rotate(rotatedText);
+        ctx.fillText(line, 0, 0);
+        ctx.restore();
+      } else {
+        ctx.fillText(line, centerX, startY + index * lineHeight);
+      }
+      ctx.fillStyle = oldColor;
+    });
+  }
+
+  drawVolcanicQAP(drawFrame = true) {
+    if (drawFrame) {
+      this.drawTriangleFrame(this.left, this.top_, this.right);
+      this.drawEdgePoints();
+    }
     const draw = this.config.isShowGrid;
     const d20 = this.drawLineParallelQ(20, draw);
     const d60 = this.drawLineParallelQ(60, draw);
     this.drawVerticalQ(10, d60, draw);
     this.drawVerticalQ(35, d20, draw);
     this.drawVerticalQ(65, d60, draw);
+
     this.drawFivePercentLine(draw);
     this.d5 = this.drawLineParallelQ(5, false);
     this.d20 = d20;
     this.d60 = d60;
     const colors = this.config.colors;
-    this.drawQuartzRichArea(colors["Quartz Rich"]);
-    this.drawAlkaliFeldsparRhyoliteArea(colors["Alkali Feldspar Rhyolite"]);
-    this.drawRhyoliteArea(colors["Rhyolite"]);
-    this.drawDaciteArea(colors["Dacite"]);
-    this.drawQ2Area(colors["Q2"]);
-    this.drawQuartzTrachyteArea(colors["Quartz Trachyte"]);
-    this.drawQuartzLatiteArea(colors["Quartz Latite"]);
-    this.drawQ1Area(colors["Q1"]);
-    this.drawTrachyteArea(colors["Trachyte"]);
-    this.drawLatiteArea(colors["Latite"]);
-    this.drawAndesiteArea(colors["Andesite"]);
+    const data = [
+      [
+        0,
+        100,
+        60,
+        100,
+        colors["Quartz Rich"],
+        "Quartz\nRich",
+        0,
+        10,
+        this.top_,
+      ],
+      [
+        0,
+        10,
+        60,
+        20,
+        colors["Alkali Feldspar Rhyolite"],
+        "Alkali Feldspar Rhyolite",
+        2,
+        0,
+        this.top_,
+        -1.096 + this.config.rAlkali,
+      ],
+      [10, 65, 60, 20, colors["Rhyolite"], "Rhyolite", 0, 0, this.top_],
+      [65, 100, 60, 20, colors["Dacite"], "Dacite", 0, 0, this.top_],
+      [0, 10, 5, 20, colors["Q2"], "Q2", 0, 0, this.top_],
+      [
+        10,
+        35,
+        5,
+        20,
+        colors["Quartz Trachyte"],
+        "Quartz\nTrachyte",
+        0,
+        0,
+        this.top_,
+      ],
+      [
+        35,
+        65,
+        5,
+        20,
+        colors["Quartz Latite"],
+        "Quartz\nLatite",
+        0,
+        0,
+        this.top_,
+      ],
+      [0, 10, 0, 5, colors["Q1"], "Q1", 0, 0, this.top_],
+      [10, 35, 0, 5, colors["Trachyte"], "Trachyte", 0, 0, this.top_],
+      [35, 65, 0, 5, colors["Latite"], "Latite", 0, 0, this.top_],
+    ];
+
+    data.forEach((d: any) => {
+      this.doFill.apply(this, d);
+    });
+    if (drawFrame) {
+      const data2 = [
+        [65, 100, 0, 20, colors["Andesite"], "Andesite", 0, 0, this.top_],
+      ];
+      data2.forEach((d: any) => {
+        this.doFill.apply(this, d);
+      });
+    }
   }
 
   getCenter(lists: number[][]) {
@@ -100,7 +270,7 @@ class TernaryGraph {
     return [x, y];
   }
 
-  fillText(text: string, box: number[][]) {
+  fillText(text: string, box: number[][], offsetX = 0, offsetY = 0) {
     if (!this.config.isShowRockNames) {
       return;
     }
@@ -110,6 +280,8 @@ class TernaryGraph {
     // relative to font size
     x -= text.length * this.fontSize * 0.2;
     y += this.fontSize * 0.3;
+    x += offsetX;
+    y += offsetY;
 
     const oldColor = this.ctx.fillStyle;
     this.ctx.fillStyle = this.config.rockNameColor;
@@ -134,220 +306,15 @@ class TernaryGraph {
     this.ctx.restore();
   }
 
-  drawQuartzRichArea(color: string) {
-    let box = [
-      [this.top_.x, this.top_.y],
-      [this.d60[1], this.d60[0]],
-      [this.d60[2], this.d60[0]],
-    ];
+  drawArea(
+    color: string,
+    title: string,
+    box: number[][],
+    offsetX = 0,
+    offsetY = 0,
+  ) {
     this.fillColor(color, box);
-    box = [
-      [this.top_.x - 20, this.top_.y],
-      [this.d60[1], this.d60[0]],
-      [this.d60[2], this.d60[0]],
-    ];
-    this.fillText("Quartz Rich", box);
-  }
-
-  drawAlkaliFeldsparRhyoliteArea(color: string) {
-    const ratio = 0.1;
-    let [yTop, x1Top, x2Top] = this.d60;
-    x2Top = x1Top + (x2Top - x1Top) * ratio;
-    let [yBottom, x1Bottom, x2Bottom] = this.d20;
-    x2Bottom = x1Bottom + (x2Bottom - x1Bottom) * ratio;
-    const box = [
-      [x1Top, yTop],
-      [x2Top, yTop],
-      [x2Bottom, yBottom],
-      [x1Bottom, yBottom],
-    ];
-    this.fillColor(color, box);
-    this.fillRotatedText("Alkali Feldspar Rhyolite", box);
-  }
-
-  drawRhyoliteArea(color: string) {
-    const ratioA = 0.1;
-    const ratioB = 0.65;
-    let [yTop, x1Top, x2Top] = this.d60;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x1Top + (x2Top - x1Top) * ratioB;
-    let [yBottom, x1Bottom, x2Bottom] = this.d20;
-    const c = x1Bottom + (x2Bottom - x1Bottom) * ratioB;
-    const d = x1Bottom + (x2Bottom - x1Bottom) * ratioA;
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, yBottom],
-      [d, yBottom],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Rhyolite", box);
-  }
-
-  drawDaciteArea(color: string) {
-    const ratioA = 0.65;
-    let [yTop, x1Top, x2Top] = this.d60;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x2Top;
-
-    let [yBottom, x1Bottom, x2Bottom] = this.d20;
-    const c = x2Bottom;
-    const d = x1Bottom + (x2Bottom - x1Bottom) * ratioA;
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, yBottom],
-      [d, yBottom],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Dacite", box);
-  }
-
-  drawQ2Area(color: string) {
-    const ratioA = 0.1;
-    let [yTop, x1Top, x2Top] = this.d20;
-    const a = x1Top;
-    const b = x1Top + (x2Top - x1Top) * ratioA;
-    let [yBottom, x1Bottom, x2Bottom] = this.d5;
-    const c = x1Bottom + (x2Bottom - x1Bottom) * ratioA;
-    const d = x1Bottom;
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, yBottom],
-      [d, yBottom],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Q2", box);
-  }
-
-  drawQuartzTrachyteArea(color: string) {
-    const ratioA = 0.1;
-    const ratioB = 0.35;
-    let [yTop, x1Top, x2Top] = this.d20;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x1Top + (x2Top - x1Top) * ratioB;
-    let [yBottom, x1Bottom, x2Bottom] = this.d5;
-    const c = x1Bottom + (x2Bottom - x1Bottom) * ratioB;
-    const d = x1Bottom + (x2Bottom - x1Bottom) * ratioA;
-
-    let box = [
-      [a, yTop],
-      [b, yTop],
-      [c, yBottom],
-      [d, yBottom],
-    ];
-    this.fillColor(color, box);
-    box = [
-      [a - 25, yTop],
-      [b, yTop],
-      [c, yBottom],
-      [d, yBottom],
-    ];
-    this.fillText("Quartz Trachyte", box);
-  }
-
-  drawQuartzLatiteArea(color: string) {
-    const ratioA = 0.35;
-    const ratioB = 0.65;
-    let [yTop, x1Top, x2Top] = this.d20;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x1Top + (x2Top - x1Top) * ratioB;
-    let [yBottom, x1Bottom, x2Bottom] = this.d5;
-    const c = x1Bottom + (x2Bottom - x1Bottom) * ratioB;
-    const d = x1Bottom + (x2Bottom - x1Bottom) * ratioA;
-
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, yBottom],
-      [d, yBottom],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Quartz Latite", box);
-  }
-
-  drawQ1Area(color: string) {
-    const ratioA = 0.1;
-    let [yTop, x1Top, x2Top] = this.d5;
-    const a = x1Top;
-    const b = x1Top + (x2Top - x1Top) * ratioA;
-    const c = this.left.x + (this.right.x - this.left.x) * ratioA;
-    const d = this.left.x;
-
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, this.left.y],
-      [d, this.left.y],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Q1", box);
-  }
-
-  drawTrachyteArea(color: string) {
-    const ratioA = 0.1;
-    const ratioB = 0.35;
-    let [yTop, x1Top, x2Top] = this.d5;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x1Top + (x2Top - x1Top) * ratioB;
-    const c = this.left.x + (this.right.x - this.left.x) * ratioB;
-    const d = this.left.x + (this.right.x - this.left.x) * ratioA;
-
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, this.left.y],
-      [d, this.left.y],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Trachyte", box);
-  }
-
-  drawLatiteArea(color: string) {
-    const ratioA = 0.35;
-    const ratioB = 0.65;
-    let [yTop, x1Top, x2Top] = this.d5;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x1Top + (x2Top - x1Top) * ratioB;
-    const c = this.left.x + (this.right.x - this.left.x) * ratioB;
-    const d = this.left.x + (this.right.x - this.left.x) * ratioA;
-
-    const box = [
-      [a, yTop],
-      [b, yTop],
-      [c, this.left.y],
-      [d, this.left.y],
-    ];
-    this.fillColor(color, box);
-    this.fillText("Latite", box);
-  }
-
-  drawAndesiteArea(color: string) {
-    const ratioA = 0.65;
-    let [yTop, x1Top, x2Top] = this.d20;
-    const a = x1Top + (x2Top - x1Top) * ratioA;
-    const b = x2Top;
-    const c = this.right.x;
-    const d = this.left.x + (this.right.x - this.left.x) * ratioA;
-
-    let box = [
-      [a, yTop],
-      [b, yTop],
-      [c, this.right.y],
-      [d, this.left.y],
-    ];
-    this.fillColor(color, box);
-
-    box = [
-      [a - 50, yTop],
-      [b, yTop],
-      [c, this.right.y],
-      [d, this.left.y],
-    ];
-    const text =
-      this.config.maficMineral > 35 ? "Basalt (M>35%)" : "Andesite (M<35%)";
-    this.fillText(text, box);
+    this.fillText(title, box, offsetX, offsetY);
   }
 
   fillColor(color: string, points: number[][]) {
@@ -415,20 +382,34 @@ class TernaryGraph {
     this.ctx.strokeStyle = oldColor;
   }
 
-  drawVerticalQ(percentageX: number, d: number[], draw = true) {
+  drawVerticalQ(
+    percentageX: number,
+    d: line,
+    draw = true,
+    s: line | null = null,
+  ) {
     if (!draw) {
       return;
     }
     const [y, xa, xb] = d;
     const ratioX = percentageX / 100;
 
-    const xAP = this.left.x + (this.right.x - this.left.x) * ratioX;
+    let xAP;
+    let ys;
+    if (s !== null) {
+      const [y, xa, xb] = s;
+      ys = y;
+      xAP = xa + (xb - xa) * ratioX;
+    } else {
+      xAP = this.left.x + (this.right.x - this.left.x) * ratioX;
+      ys = this.left.y;
+    }
     const x = xa + (xb - xa) * ratioX;
 
     const oldColor = this.ctx.strokeStyle;
     this.ctx.strokeStyle = this.config.gridColor;
     this.ctx.beginPath();
-    this.ctx.moveTo(xAP, this.left.y);
+    this.ctx.moveTo(xAP, ys);
     this.ctx.lineTo(x, y);
     this.ctx.stroke();
     this.ctx.strokeStyle = oldColor;
@@ -476,12 +457,76 @@ class TernaryGraph {
       this.drawPoint([this.top_.x, this.top_.y], c);
     }
   }
+  drawEdge4(left: string, right: string, top: string, bottom: string) {
+    // set font size using config
+    if (this.config.isShowAxis) {
+      const oldFont = this.ctx.font;
+      this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
+      this.drawTextWithLineBreaks(
+        top,
+        [
+          [this.top_.x, this.top_.y],
+          [this.top_.x, 0],
+        ],
+        0,
+        0,
+        0,
+        "center",
+      );
+      this.drawTextWithLineBreaks(
+        bottom,
+        [
+          [this.bottom_.x, this.bottom_.y],
+          [this.bottom_.x, this.h],
+        ],
+        0,
+        0,
+        0,
+        "center",
+      );
+      this.drawTextWithLineBreaks(
+        left,
+        [
+          [this.left.x, this.left.y],
+          [this.left.x - this.offset, this.left.y],
+        ],
+        0,
+        0,
+        0,
+        "center",
+      );
+      this.drawTextWithLineBreaks(
+        right,
+        [
+          [this.right.x, this.right.y],
+          [this.right.x + this.offset, this.right.y],
+        ],
+        0,
+        0,
+        0,
+        "center",
+      );
+      this.ctx.font = oldFont;
+    }
 
-  drawLineParallelQ(percentage: number, draw = true): [number, number, number] {
+    if (this.config.isShowCircle) {
+      const c = "#505050";
+      this.drawPoint([this.left.x, this.left.y], c);
+      this.drawPoint([this.right.x, this.right.y], c);
+      this.drawPoint([this.top_.x, this.top_.y], c);
+      this.drawPoint([this.bottom_.x, this.bottom_.y], c);
+    }
+  }
+
+  drawLineParallelQ(
+    percentage: number,
+    draw = true,
+    top: { x: number; y: number } = this.top_,
+  ): [number, number, number] {
     const ratio = percentage / 100;
-    const y = this.left.y + (this.top_.y - this.left.y) * ratio;
-    const xAQ = this.left.x + (this.top_.x - this.left.x) * ratio;
-    const xPQ = this.right.x + (this.top_.x - this.right.x) * ratio;
+    const y = this.left.y + (top.y - this.left.y) * ratio;
+    const xAQ = this.left.x + (top.x - this.left.x) * ratio;
+    const xPQ = this.right.x + (top.x - this.right.x) * ratio;
     const x1 = xAQ;
     const x2 = xPQ;
     if (draw) {
@@ -494,6 +539,61 @@ class TernaryGraph {
       this.ctx.strokeStyle = oldColor;
     }
     return [y, x1, x2];
+  }
+
+  drawFrameBottom(sPercent: number, dPercent: number) {
+    const xa = this.left.x + ((this.right.x - this.left.x) * sPercent) / 100;
+    const xb = this.left.x + ((this.right.x - this.left.x) * dPercent) / 100;
+    const y = this.left.y;
+    const oldColor = this.ctx.strokeStyle;
+    this.ctx.strokeStyle = this.config.gridColor;
+    this.ctx.beginPath();
+    this.ctx.moveTo(xa, y);
+    this.ctx.lineTo(xb, y);
+    this.ctx.stroke();
+    this.ctx.strokeStyle = oldColor;
+  }
+
+  doFill(
+    left: number,
+    right: number,
+    top: number,
+    bottom: number,
+    color: string,
+    title: string,
+    offsetX = 0,
+    offsetY = 0,
+    top_: { x: number; y: number } = this.bottom_,
+    rotatedText: number = 0,
+    textAlign: CanvasTextAlign = "center",
+  ) {
+    // find leftTop
+    const ratioA = left / 100;
+    const ratioB = right / 100;
+    const lineTop = this.drawLineParallelQ(top, false, top_);
+    const lineBottom = this.drawLineParallelQ(bottom, false, top_);
+    const leftTop = lineTop[1] + (lineTop[2] - lineTop[1]) * ratioA;
+    const rightTop = lineTop[1] + (lineTop[2] - lineTop[1]) * ratioB;
+    const leftBottom = lineBottom[1] + (lineBottom[2] - lineBottom[1]) * ratioA;
+    const rightBottom =
+      lineBottom[1] + (lineBottom[2] - lineBottom[1]) * ratioB;
+    const box = [
+      [leftTop, lineTop[0]],
+      [rightTop, lineTop[0]],
+      [rightBottom, lineBottom[0]],
+      [leftBottom, lineBottom[0]],
+    ];
+    this.fillColor(color, box);
+    // this.fillText(title, box, offsetX, offsetY);
+
+    this.drawTextWithLineBreaks(
+      title,
+      box,
+      offsetX,
+      offsetY,
+      rotatedText,
+      textAlign,
+    );
   }
 }
 

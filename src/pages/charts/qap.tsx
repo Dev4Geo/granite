@@ -7,6 +7,8 @@ import {
   canvasConfigType,
   colorTheme,
   defaultConfig,
+  defaultConfigMobileVQAP,
+  defaultConfigVQAPF,
   QAP,
   symbolType,
   themeType,
@@ -305,7 +307,6 @@ const Graph = () => {
     });
   };
 
-  const topLogoSize = 60;
   const bottomLogoSize = 30;
 
   useEffect(() => {
@@ -313,11 +314,15 @@ const Graph = () => {
     if (window.innerWidth < 500) {
       setCanvasConfig({
         ...canvasConfig,
-        fontSizeLegend: 6,
-        xLegend: -35,
-        yLegend: -30,
+        ...defaultConfigMobileVQAP,
       });
     } 
+    if (canvasConfig.graphType === 'vQAPF'){
+      setCanvasConfig({
+        ...canvasConfig,
+        ...defaultConfigVQAPF,
+      });
+    }
   }, []);
 
   return (

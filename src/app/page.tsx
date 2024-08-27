@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/graph");
+    router.push("/charts/qap");
   })
    
   return null;
