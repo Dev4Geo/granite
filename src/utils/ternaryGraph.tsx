@@ -90,7 +90,7 @@ class TernaryGraph {
         90,
         "#a0A1c0",
         "Phonlitic\nFoidite",
-        10,
+        20,
         -12,
         this.bottom_,
         0,
@@ -103,13 +103,13 @@ class TernaryGraph {
         90,
         "#f0A1c0",
         "Basanitic\nFoidite",
-        -10,
+        -20,
         -12,
         this.bottom_,
         0,
         "start",
       ],
-      [0, 100, 90, 100, "#f0A1c0", "F2", 0, 0],
+      [0, 100, 90, 100, "#f0A1c0", "F2", 0, -3],
     ];
 
     data.forEach((d: any) => {
