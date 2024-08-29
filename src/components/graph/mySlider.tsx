@@ -1,5 +1,6 @@
 type MySliderProps = {
   title: string;
+  name: string;
   min: number;
   max: number;
   step?: number;
@@ -10,6 +11,7 @@ type MySliderProps = {
 
 const MySlider = ({
   title,
+  name,
   min,
   max,
   step,
@@ -23,6 +25,7 @@ const MySlider = ({
       <input
         className="slider accent-green-700"
         type="range"
+        name={name}
         min={min}
         max={max}
         step={step}

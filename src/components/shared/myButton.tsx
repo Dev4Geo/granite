@@ -7,7 +7,7 @@ type MyButtonProps = {
 const MyButton = ({ title, onClick }: MyButtonProps) => {
   return (
     //
-    <Button onClick={onClick}>{title}</Button>
+    <Button color="success" onClick={onClick}>{title}</Button>
   );
 };
 export default MyButton;
