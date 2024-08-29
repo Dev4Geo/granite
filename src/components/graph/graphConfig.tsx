@@ -1,29 +1,18 @@
-import { useState } from "react";
-import { colorTheme } from "@/types/types";
 import MySlider from "./mySlider";
 import MyCheckbox from "./myCheckbox";
 import MyColorInput from "./myColorInput";
 import { Button } from "@mui/material";
 import MySettingHeader from "./mySettingHeader";
+import { colorTheme } from "@/types/colors";
 
 const GraphConfig = ({
   canvasConfig,
   handleColor,
-  handleReset,
   handleTheme,
   handleNumericValue,
   handleToggle,
   handleValue,
 }: any) => {
-  const [size, setSize] = useState({
-    width: canvasConfig.width,
-    height: canvasConfig.height,
-  });
-  const handleTempSize = (e: any) => {
-    const { name, value } = e.target;
-    setSize({ ...size, [name]: value });
-  };
-
   const keys = Object.keys(canvasConfig.colors);
   const themes = Object.keys(colorTheme);
 
