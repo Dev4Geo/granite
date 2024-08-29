@@ -1,7 +1,7 @@
-import { QAP, symbolType } from "@/types/types";
+import { MyDataType, symbolType } from "@/types/types";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useEffect, useState } from "react";
+import assert from "assert";
 
 const CircleColor = ({ symbol }: { symbol: symbolType }) => {
   const style = [
@@ -15,27 +15,43 @@ const CircleColor = ({ symbol }: { symbol: symbolType }) => {
   return <div className={style} />;
 };
 
-const Record = ({ dat, onDelete }: { dat: QAP; onDelete: any }) => {
-  const [width, setWidth] = useState(0);
-  const style = " text-gray-400 text-sm text-start border w-full max-w-[3rem]";
-  const style2 =
-    "hidden sm:flex flex-row text-gray-400 text-[0.7rem] w-[17rem] ";
-
-  useEffect(() => {
-    setWidth(window.innerWidth);
-  }, []);
+const Record = ({
+  dat,
+  onDelete,
+  axisNames,
+}: {
+  dat: MyDataType;
+  onDelete: any;
+  axisNames: string[];
+}) => {
+  const nAxis = axisNames.length;
+  assert(nAxis === 3 || nAxis === 4, "nAxis should be 3 or 4");
+  const top = dat.top || 0;
+  const left = dat.left || 0;
+  const right = dat.right || 0;
+  const bottom = dat.bottom || 0;
+  const total = top + left + right + bottom;
+  const pTop = ((top / total) * 100).toFixed(2);
+  const pLeft = ((left / total) * 100).toFixed(2);
+  const pRight = ((right / total) * 100).toFixed(2);
+  const pBottom = ((bottom / total) * 100).toFixed(2);
+  const data = [top, left, right];
+  if (nAxis === 4) data.push(bottom);
 
   return (
-    <div className="flex flex-row bg-gray-100 space-x-2 px-2  w-full shadow items-end">
-      <CircleColor symbol={dat.symbol} />
-      <div className="flex flex-row justify-start space-x-1 w-full max-w-[300px]">
-        <div className={style}>{dat.Q}</div>
-        <div className={style}>{dat.A}</div>
-        <div className={style}>{dat.P}</div>
-      </div>
-      <div className={style2}>
-        Total={(dat.Q + dat.A + dat.P).toFixed(2)} Q={dat.Q}% A={dat.A}% P=
-        {dat.P}%
+    <div className="flex flex-row bg-gray-50 w-full shadow justify-between">
+      <div className="flex flex-row  space-x-2 px-2 items-end justify-start text-gray-400">
+        <CircleColor symbol={dat.symbol} />
+        <div className="flex flex-row justify-start space-x-1 w-fit  text-sm text-start [&>*]:w-[4rem]">
+          {data.map((d, i) => (
+            <div key={i}>{d}</div>
+          ))}
+        </div>
+        <div className="hidden lg:flex flex-row text-[0.7rem] w-[20rem]">
+          Total={total.toFixed(2)} {axisNames[0]}={pTop}% {axisNames[1]}={pLeft}
+          % {axisNames[2]}={pRight}%{" "}
+          {nAxis === 4 && `${axisNames[3]}=${pBottom}%`}
+        </div>
       </div>
       <IconButton
         aria-label="delete"

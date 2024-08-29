@@ -356,8 +356,14 @@ Q2. Quartz alkali feldspar trachyte
     this.ctx.globalAlpha = oldAlpha;
   }
 
-  plot(Q: number, A: number, P: number, symbol: symbolType) {
-    const p = this.getCoordinate(Q, A, P);
+  plot(
+    top: number,
+    left: number,
+    right: number,
+    bottom: number = 0,
+    symbol: symbolType = 'red',
+  ) {
+    const p = this.getCoordinate(top, left, right, bottom);
     this.drawPoint(p, symbol, this.config.plotSize);
   }
 
@@ -371,13 +377,21 @@ Q2. Quartz alkali feldspar trachyte
     this.ctx.fillStyle = oldColor;
   }
 
-  getCoordinate(Q: number, A: number, P: number) {
-    const sum = Number(Q) + Number(A) + Number(P);
-    const percentageQ = Q / sum;
+  getCoordinate(Q: number, A: number, P: number, F: number) {
+    [Q, A, P, F] = [Number(Q)||0, Number(A)||0, Number(P)||0, Number(F)||0];
+    const top = Q > F ? Q : F;
+    const top_ = Q > F ? this.top_ : this.bottom_;
+    console.log(Q>F?'top': 'bot')
+    const sum = top + A + P;
+    const percentageTop = top / sum;
     const percentageA = A / sum;
     const percentageP = P / sum;
     const ratioX = percentageP / (percentageA + percentageP);
-    const [y, x1, x2] = this.drawLineParallelQ(percentageQ * 100, false);
+    const [y, x1, x2] = this.drawLineParallelQ(
+      percentageTop * 100,
+      false,
+      top_,
+    );
     const x = x1 + (x2 - x1) * ratioX;
     return [x, y];
   }
@@ -469,7 +483,7 @@ Q2. Quartz alkali feldspar trachyte
     // set font size using config
     const ctx = this.ctx;
     if (this.config.isShowAxis) {
-      ctx.save()
+      ctx.save();
       const fontSize = this.config.fontSizeAxis;
       ctx.fillStyle = this.config.axisColor;
       ctx.font = `${fontSize}px Arial`;
@@ -477,16 +491,16 @@ Q2. Quartz alkali feldspar trachyte
       d.forEach((d: any) => {
         this.ctx.fillText(d[0], d[1], d[2]);
       });
-      ctx.restore()
+      ctx.restore();
     }
 
     if (this.config.isShowCircle) {
-      ctx.save()
+      ctx.save();
       const d = circleFunc(this);
       d.forEach((d: any) => {
         this.drawPoint([d[0], d[1]], d[2]);
       });
-      ctx.restore()
+      ctx.restore();
     }
   }
 

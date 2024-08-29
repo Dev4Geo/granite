@@ -7,12 +7,12 @@ import {
   canvasConfigType,
   defaultConfig,
   defaultConfigVQAPF,
-  QAP,
+  MyDataType,
   symbolType,
 } from "@/types/types";
 import GraphConfig from "@/components/graph/graphConfig";
 import Record from "@/components/graph/record";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import Image from "next/image";
 import MyMenu from "@/components/shared/myMenu";
 import MyButton from "@/components/shared/myButton";
@@ -26,17 +26,19 @@ const debug = false;
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isShowSettings, setIsShowSettings] = useState(false || debug);
-  const [data, setData] = useState<QAP[]>([
+  const [data, setData] = useState<MyDataType[]>([
     {
-      Q: 20.11,
-      A: 88.88,
-      P: 9.5,
+      top: 20.11,
+      left: 88.88,
+      right: 9.5,
+      bottom: 0,
       symbol: "blue",
     },
     {
-      Q: 20,
-      A: 70.5,
-      P: 9.5,
+      top: 20,
+      left: 70.5,
+      right: 9.5,
+      bottom: 0,
       symbol: "red",
     },
   ]);
@@ -46,15 +48,14 @@ const Graph = () => {
 
   const draw = () => {
     const canvas = canvasRef.current;
-    if (canvas) {
-      const g = new TernaryGraph(canvas, canvasConfig);
-      g.drawTriangle();
-      setGraph(g);
-      // loop plot in data
-      data.forEach((d) => {
-        g.plot(d.Q, d.A, d.P, d.symbol as symbolType);
-      });
-    }
+    if (!canvas) return;
+    const g = new TernaryGraph(canvas, canvasConfig);
+    g.drawTriangle();
+    setGraph(g);
+    // loop plot in data
+    data.forEach((d) => {
+      g.plot(d.top, d.left, d.right, d.bottom, d.symbol as symbolType);
+    });
   };
 
   useEffect(() => {
@@ -62,18 +63,21 @@ const Graph = () => {
   }, [canvasRef, canvasConfig, data]);
 
   const handleSave = (QAP: any, symbol: any) => {
-    let Q = parseFloat(QAP.Q);
-    let A = parseFloat(QAP.A);
-    let P = parseFloat(QAP.P);
+    console.log(QAP, symbol);
+    let Q = parseFloat(QAP.top);
+    let A = parseFloat(QAP.left);
+    let P = parseFloat(QAP.right);
+    let F = parseFloat(QAP.bottom);
 
     // save to data
-    graph?.plot(Q, A, P, symbol);
+    graph?.plot(Q, A, P, F, symbol);
     setData((prev) => [
       ...prev,
       {
-        Q: QAP.Q,
-        A: QAP.A,
-        P: QAP.P,
+        top: QAP.top,
+        left: QAP.left,
+        right: QAP.right,
+        bottom: QAP.bottom,
         symbol,
       },
     ]);
@@ -137,6 +141,9 @@ const Graph = () => {
     temp.splice(index, 1);
     setData(temp);
   };
+  const handleClearAll = () => {
+    setData([]);
+  };
 
   const bottomLogoSize = 30;
 
@@ -160,7 +167,7 @@ const Graph = () => {
         {
           // canvas
         }
-        <div className="sm:col-span-10 lg:col-span-6">
+        <div className="lg:col-span-6">
           {false ? (
             <div className="">Loading...</div>
           ) : (
@@ -197,7 +204,7 @@ const Graph = () => {
         {
           // config
         }
-        <div className="sm:col-span-2 lg:col-span-6 flex flex-col items-center lg:items-start space-y-1">
+        <div className="lg:col-span-6  lg:items-start flex flex-col items-center space-y-1 max-lg:mt-4">
           <div className="flex flex-col space-y-1  p-1">
             <div className="flex  flex-row items-end">
               <Image
@@ -215,6 +222,9 @@ const Graph = () => {
               >
                 <SettingsIcon fontSize="small" className="" />
               </IconButton>
+              {
+                // graphType
+              }
               <MyButton
                 title="QAP"
                 onClick={() => {
@@ -260,13 +270,25 @@ const Graph = () => {
                         onDelete={() => {
                           handleDelete(i);
                         }}
+                        axisNames={canvasConfig.axisNames}
                       />
                     ))}
+
+                    {data.length >= 4 && (
+                      <div className="flex flex-row w-full justify-end">
+                        <Button color="error" onClick={handleClearAll}>
+                          Clear all
+                        </Button>
+                      </div>
+                    )}
                   </div>
                   {
                     // input form
                   }
-                  <QAPForm onSave={handleSave} />
+                  <QAPForm
+                    onSave={handleSave}
+                    axisNames={canvasConfig.axisNames}
+                  />
                 </div>
               )
             }

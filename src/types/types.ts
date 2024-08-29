@@ -6,10 +6,11 @@ export const colorMap: { [key: string]: string } = {
   B: "blue",
   Custom: "Custom",
 };
-export type QAP = {
-  Q: number;
-  A: number;
-  P: number;
+export type MyDataType = {
+  top: number;
+  left: number;
+  right: number;
+  bottom: number;
   symbol: symbolType;
 };
 
@@ -55,6 +56,7 @@ export type canvasConfigType = {
   colorLegend: string;
   graphType: graphType;
   plotSize: number;
+  axisNames: string[];
 };
 
 const theme = colorTheme.olivine;
@@ -99,6 +101,7 @@ export const defaultConfig: canvasConfigType = {
   colorLegend: "#303030",
   graphType: "vQAP",
   plotSize: 15,
+  axisNames: ["Q", "A", "P"],
 };
 
 export const defaultConfigVQAPF = {
@@ -107,4 +110,5 @@ export const defaultConfigVQAPF = {
   fontSizeAxis: 85, // QAPF
   xLegend: 115,
   graphType: "vQAPF",
+  axisNames: ["Q", "A", "P", "F"],
 };
