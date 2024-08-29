@@ -5,12 +5,10 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 import {
   canvasConfigType,
-  colorTheme,
   defaultConfig,
   defaultConfigVQAPF,
   QAP,
   symbolType,
-  themeType,
 } from "@/types/types";
 import GraphConfig from "@/components/graph/graphConfig";
 import Record from "@/components/graph/record";
@@ -18,6 +16,7 @@ import { IconButton } from "@mui/material";
 import Image from "next/image";
 import MyMenu from "@/components/shared/myMenu";
 import MyButton from "@/components/shared/myButton";
+import { colorTheme } from "@/types/colors";
 
 // const debug = true;
 const debug = false;
@@ -57,7 +56,7 @@ const Graph = () => {
 
   useEffect(() => {
     draw();
-  }, [ canvasRef, canvasConfig, data]);
+  }, [canvasRef, canvasConfig, data]);
 
   const handleSave = (QAP: any, symbol: any) => {
     let Q = parseFloat(QAP.Q);
@@ -95,7 +94,7 @@ const Graph = () => {
     });
   };
 
-  const handleTheme = (themeName: themeType) => {
+  const handleTheme = (themeName: keyof typeof colorTheme) => {
     const theme = colorTheme[themeName];
     setCanvasConfig({
       ...canvasConfig,
