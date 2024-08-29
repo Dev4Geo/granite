@@ -1,0 +1,95 @@
+import { useState } from "react";
+import OpenWithIcon from "@mui/icons-material/OpenWith";
+import { canvasConfigType } from "@/types/types";
+import LegendVQAP from "../legends/vQAP";
+
+const Legend = ({ canvasConfig }: { canvasConfig: canvasConfigType }) => {
+  const scale = canvasConfig.fontSizeLegend / 100;
+  // const [position, setPosition] = useState({ top: canvasConfig.yLegend, left: canvasConfig.xLegend });
+  const [isDragging, setIsDragging] = useState(false);
+  // const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
+
+  // make this div can move by dragging
+  // let startPosition = { x: 0, y: 0 };
+  let previousPosition = { x: 0, y: 0 };
+
+  return (
+    <div
+      style={
+        {
+          "--scale": scale,
+          top: canvasConfig.yLegend,
+          left: canvasConfig.xLegend,
+        } as any
+      }
+      className={`absolute md:left-0 text-gray-700 bg-gray-100 shadow p-2 transform scale-[var(--scale)] group`}
+    // onMouseDown={(e) => {
+    //   setIsDragging(true);
+    //   e.preventDefault();
+    // }}
+    // onMouseUp={() => {
+    // setIsDragging(false);
+    // }}
+    // onMouseLeave={() => {
+    //   setIsDragging(false);
+    // }}
+    // onMouseMove={(e) => {
+    //   if (isDragging) {
+    //     console.log(e.movementX, e.movementY);
+    //     setPosition({
+    //       top: position.top + e.movementY,
+    //       left: position.left + e.movementX,
+    //     });
+    //   }
+    // }}
+    // onTouchStart={(e) => {
+    //   const touch = e.touches[0];
+    //   const startPosition = { x: touch.screenX, y: touch.screenY };
+    //   setStartPosition(startPosition);
+    //   setIsDragging(true);
+    //   // log
+    //   // console.log("start", startPosition);
+    //   // e.preventDefault();
+    // }}
+    // onTouchEnd={() => {
+    //   setIsDragging(false);
+    // }}
+    // onTouchMove={(e) => {
+    //   if (isDragging) {
+    //     const touch = e.touches[0];
+    //     // console.log(touch, startPosition.x -touch.screenX);
+    //     setPosition({
+    //       top: position.top + touch.screenY - startPosition.y,
+    //       left: position.left + touch.screenX - startPosition.x,
+    //     });
+    //     setStartPosition({ x: touch.screenX, y: touch.screenY });
+    //   }
+    // }
+    // }
+    // onTouchCancelCapture={() => {
+    //   setIsDragging(false);
+    // }}
+    >
+      {
+
+      // <div
+      //   className={`${isDragging && "group-hover:text-gray-100"} text-start`}
+      // >
+      }
+      <LegendVQAP/>
+      {
+        // <div
+        //   className={`${isDragging && "group-hover:flex group-hover:flex-col"}  hidden absolute w-full h-full bg-green-50 items-center justify-center left-0 top-0`}
+        //   onClick={() => {
+        //     setIsDragging(false);
+        //     console.log("clicked");
+        //   }}
+        // >
+        //   <OpenWithIcon fontSize="large" className="text-green-600" />
+        //   {isDragging ? "Dragging" : "Not Dragging"}
+        // </div>
+      }
+    </div>
+  );
+};
+export default Legend;
