@@ -17,6 +17,8 @@ import Image from "next/image";
 import MyMenu from "@/components/shared/myMenu";
 import MyButton from "@/components/shared/myButton";
 import { colorTheme } from "@/types/colors";
+import MaficSlider from "@/components/graph/maficSlider";
+import MyFooter from "@/components/shared/myFooter";
 
 // const debug = true;
 const debug = false;
@@ -33,7 +35,8 @@ const Graph = () => {
     },
     {
       Q: 20,
-      A: 70.5, P: 9.5,
+      A: 70.5,
+      P: 9.5,
       symbol: "red",
     },
   ]);
@@ -183,24 +186,10 @@ const Graph = () => {
               {
                 // mafic slider
               }
-              <div className="flex flex-col">
-                <div className="flex flex-row space-x-1">
-                  <div className="text-sm text-gray-600">Mafic Mineral</div>
-                  <div className="w-[3rem] text-sm">
-                    {canvasConfig.maficMineral} %
-                  </div>
-                </div>
-                <input
-                  className="slider accent-green-700"
-                  type="range"
-                  name="maficMineral"
-                  min={0}
-                  max={100}
-                  step={0.1}
-                  value={canvasConfig.maficMineral}
-                  onChange={handleNumericValue}
-                />
-              </div>
+              <MaficSlider
+                canvasConfig={canvasConfig}
+                onChange={handleNumericValue}
+              />
             </div>
           )}
         </div>
@@ -288,56 +277,7 @@ const Graph = () => {
       {
         // footer
       }
-      <footer className="fixed bottom-0 left-0 z-20 w-full p-4 border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 bg-gray-100">
-        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © 2024{" "}
-          <a href="https://github.com/Dev4Geo" className="hover:underline">
-            Dev4Geo
-          </a>
-          . Licensed under the{" "}
-          <a
-            href="https://github.com/Dev4Geo/granite/blob/main/LICENSE"
-            className="hover:underline"
-          >
-            Apache-2.0 License
-          </a>
-          .
-        </span>
-        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-          <li>
-            <a
-              href="https://github.com/Dev4Geo/Docs"
-              className="hover:underline me-4 md:me-6"
-            >
-              About
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/Dev4Geo/granite"
-              className="hover:underline me-4 md:me-6"
-            >
-              Source Code (GitHub)
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/Dev4Geo/granite/blob/main/LICENSE"
-              className="hover:underline me-4 md:me-6"
-            >
-              License
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/Dev4Geo/Dev4Geo/blob/main/contact.md"
-              className="hover:underline"
-            >
-              Contact
-            </a>
-          </li>
-        </ul>
-      </footer>
+      <MyFooter />
     </div>
   );
 };
