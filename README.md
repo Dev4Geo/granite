@@ -11,7 +11,9 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 - [x] legend size config
 - [x] fix long color names
 - [x] menu bar
-- [ ] footer links
+- [x] footer links
+- [ ] alternative solutions
+- [ ] chart opacity
 - [ ] mouse hover show %
 - [ ] theme color preview 
 - [ ] link to alternative tools
@@ -23,13 +25,13 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 - [x] show qap diagram.
 - [x] simple plot qap diagrams.
 - [x] deploy 
+- [x] add QAPF 
+- [ ] add FAP 
 - [ ] support olivine percentage
-- [ ] add qapf and fap
 - [ ] support custom symbols
 - [ ] import and export to csv or excel files.
 - [ ] export to json.
 - [ ] export diagrams as png.
-- [ ] add app icon
 - [ ] login to save configurations and diagrams.
 - [ ] usage counting
 - [ ] share diagrams

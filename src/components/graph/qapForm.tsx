@@ -129,8 +129,11 @@ export default function QAPForm({ onSave, axisNames }: any) {
               onChange={handleChange}
             />
           )}
-          <Button onClick={() => handleRandom(true)}>random</Button>
+          <Button color="success" onClick={() => handleRandom(true)}>
+            random
+          </Button>
           <Button
+            color="success"
             onClick={() => {
               const obj = handleRandom(false);
               const color =
@@ -139,7 +142,7 @@ export default function QAPForm({ onSave, axisNames }: any) {
               handleOnSave(color, obj);
             }}
           >
-            random plot
+            r plot
           </Button>
         </div>
       </div>
