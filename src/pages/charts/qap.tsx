@@ -7,31 +7,23 @@ import {
   canvasConfigType,
   colorTheme,
   defaultConfig,
-  defaultConfigMobileVQAP,
   defaultConfigVQAPF,
-  graphType,
   QAP,
   symbolType,
   themeType,
 } from "@/types/types";
 import GraphConfig from "@/components/graph/graphConfig";
 import Record from "@/components/graph/record";
-import { IconButton, Slider } from "@mui/material";
+import { IconButton } from "@mui/material";
 import Image from "next/image";
-import Legend from "@/components/graph/legend";
 import MyMenu from "@/components/shared/myMenu";
 import MyButton from "@/components/shared/myButton";
 
-const debug = true;
+// const debug = true;
+const debug = false;
 
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [screenSize, setScreenSize] = useState({
-    width: 0,
-    height: 0,
-    canvasW: 0,
-    canvasH: 0,
-  });
   const [isShowSettings, setIsShowSettings] = useState(false || debug);
   const [data, setData] = useState<QAP[]>([
     {
@@ -42,43 +34,13 @@ const Graph = () => {
     },
     {
       Q: 20,
-      A: 70.5,
-      P: 9.5,
+      A: 70.5, P: 9.5,
       symbol: "red",
     },
   ]);
   const [graph, setGraph] = useState<TernaryGraph | null>(null);
   const [canvasConfig, setCanvasConfig] =
     useState<canvasConfigType>(defaultConfig);
-  const [legendFontSize, setLegendFontSize] = useState(10);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const w = window.innerWidth;
-      if (w > 640) {
-        canvasConfig.width = w / 3;
-        canvasConfig.height = canvasConfig.width * 1;
-      } else {
-        canvasConfig.width = 360;
-        canvasConfig.height = canvasConfig.width * 1;
-        canvasConfig.fontSize = 8;
-      }
-
-      // const height = window.innerHeight;
-      const width = canvasConfig.width;
-      const height = canvasConfig.height;
-      const canvasW = Math.max(width * 0.5, 300);
-      const canvasH = canvasW * 0.9;
-      setScreenSize({ width, height, canvasW, canvasH });
-    };
-
-    handleResize();
-
-    // window.addEventListener("resize", handleResize);
-    // return () => {
-    //   window.removeEventListener("resize", handleResize);
-    // };
-  }, []);
 
   const draw = () => {
     const canvas = canvasRef.current;
@@ -95,12 +57,13 @@ const Graph = () => {
 
   useEffect(() => {
     draw();
-  }, [screenSize, canvasRef, canvasConfig, data]);
+  }, [ canvasRef, canvasConfig, data]);
 
   const handleSave = (QAP: any, symbol: any) => {
-    const Q = parseFloat(QAP.Q);
-    const A = parseFloat(QAP.A);
-    const P = parseFloat(QAP.P);
+    let Q = parseFloat(QAP.Q);
+    let A = parseFloat(QAP.A);
+    let P = parseFloat(QAP.P);
+
     // save to data
     graph?.plot(Q, A, P, symbol);
     setData((prev) => [
@@ -114,41 +77,13 @@ const Graph = () => {
     ]);
   };
 
-  const handleFontSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      fontSize: value,
-      width: canvasConfig.width,
-      height: canvasConfig.height,
-    });
-  };
-  const handleFontSizeAxis = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      fontSizeAxis: value,
-      width: canvasConfig.width,
-      height: canvasConfig.height,
-    });
-  };
-  const handleWidth = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      fontSize: canvasConfig.fontSize,
-      fontSizeAxis: canvasConfig.fontSizeAxis,
-      width: value,
-    });
-  };
+  const handleNumericValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const numericValue = parseFloat(value);
 
-  const handleHeight = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
     setCanvasConfig({
       ...canvasConfig,
-      fontSize: canvasConfig.fontSize,
-      fontSizeAxis: canvasConfig.fontSizeAxis,
-      height: value,
+      [name]: numericValue,
     });
   };
 
@@ -157,47 +92,6 @@ const Graph = () => {
     setCanvasConfig({
       ...canvasConfig,
       colors: { ...canvasConfig.colors, [key]: value },
-    });
-  };
-  const handleReset = () => {
-    window.location.reload();
-  };
-  const handleRAlkali = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      rAlkali: value,
-    });
-  };
-  const handleXAlkali = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      xAlkali: value,
-    });
-  };
-
-  const handleYAlkali = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      yAlkali: value,
-    });
-  };
-
-  const handleRatio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      ratio: value,
-    });
-  };
-
-  const handleMaficMineral = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      maficMineral: value,
     });
   };
 
@@ -221,61 +115,18 @@ const Graph = () => {
     });
   };
 
-  const handleIsShowColors = () => {
+  const handleToggle = (property: keyof typeof canvasConfig) => {
     setCanvasConfig({
       ...canvasConfig,
-      isShowColors: !canvasConfig.isShowColors,
+      [property]: !canvasConfig[property],
     });
   };
 
-  const handleIsShowAxis = () => {
+  const handleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setCanvasConfig({
       ...canvasConfig,
-      isShowAxis: !canvasConfig.isShowAxis,
-    });
-  };
-
-  const handleIsShowGrid = () => {
-    setCanvasConfig({
-      ...canvasConfig,
-      isShowGrid: !canvasConfig.isShowGrid,
-    });
-  };
-
-  const handleIsShowRockNames = () => {
-    setCanvasConfig({
-      ...canvasConfig,
-      isShowRockNames: !canvasConfig.isShowRockNames,
-    });
-  };
-
-  const handleRockNameColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCanvasConfig({
-      ...canvasConfig,
-      rockNameColor: value,
-    });
-  };
-
-  const handleGridColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCanvasConfig({
-      ...canvasConfig,
-      gridColor: value,
-    });
-  };
-
-  const handleIsShowLegend = () => {
-    setCanvasConfig({
-      ...canvasConfig,
-      isShowLegend: !canvasConfig.isShowLegend,
-    });
-  };
-
-  const handleIsShowCircle = () => {
-    setCanvasConfig({
-      ...canvasConfig,
-      isShowCircle: !canvasConfig.isShowCircle,
+      [name]: value,
     });
   };
 
@@ -285,47 +136,16 @@ const Graph = () => {
     setData(temp);
   };
 
-  const handleFontSizeLegend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    // log
-    setCanvasConfig({
-      ...canvasConfig,
-      fontSizeLegend: value,
-    });
-  };
-
-  const handleXLegend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      xLegend: value,
-    });
-  };
-  const handleYLegend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setCanvasConfig({
-      ...canvasConfig,
-      yLegend: value,
-    });
-  };
-
   const bottomLogoSize = 30;
 
-  useEffect(() => {
-    // if screen width < 500 legendFontSize = 5
-    if (window.innerWidth < 500) {
+  if (debug) {
+    useEffect(() => {
       setCanvasConfig({
         ...canvasConfig,
-        ...defaultConfigMobileVQAP,
+        ...(defaultConfigVQAPF as canvasConfigType),
       });
-    }
-    if (canvasConfig.graphType === "vQAPF") {
-      setCanvasConfig({
-        ...canvasConfig,
-        ...defaultConfigVQAPF,
-      });
-    }
-  }, []);
+    });
+  }
 
   return (
     <div className="flex flex-col items-center text-gray-600 w-full">
@@ -334,32 +154,37 @@ const Graph = () => {
       {
         // main content; canvas; input form; data
       }
-      <div className=" w-full flex flex-col md:flex-row p-2 space-x-1 mt-3 mb-[8rem]">
-        <div className=""></div>
-        <div className="flex grow-[1] justify-center">
+      <div className=" w-full grid grid-cols-1 lg:grid-cols-12 p-2 space-x-1 mt-3 mb-[8rem]">
+        {
+          // canvas
+        }
+        <div className="sm:col-span-10 lg:col-span-6">
           {false ? (
             <div className="">Loading...</div>
           ) : (
-            <div className="flex flex-col items-center">
-              <div className="relative">
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className="relative flex flex-row justify-center w-full px-5">
                 {
                   // canvas
                 }
                 <canvas
                   ref={canvasRef}
-                  width={screenSize.canvasW}
-                  height={screenSize.canvasH}
-                  className=""
+                  className="h-auto w-full max-w-[40rem]"
                 ></canvas>
                 {
                   // legend
                 }
-                {canvasConfig.isShowLegend && (
-                  <Legend canvasConfig={canvasConfig} />
-                )}
+                {
+                  // {canvasConfig.isShowLegend && (
+                  //   <Legend canvasConfig={canvasConfig} />
+                  // )}
+                }
               </div>
 
-              <div className="">
+              {
+                // mafic slider
+              }
+              <div className="flex flex-col">
                 <div className="flex flex-row space-x-1">
                   <div className="text-sm text-gray-600">Mafic Mineral</div>
                   <div className="w-[3rem] text-sm">
@@ -369,17 +194,22 @@ const Graph = () => {
                 <input
                   className="slider accent-green-700"
                   type="range"
+                  name="maficMineral"
                   min={0}
                   max={100}
                   step={0.1}
                   value={canvasConfig.maficMineral}
-                  onChange={handleMaficMineral}
+                  onChange={handleNumericValue}
                 />
               </div>
             </div>
           )}
         </div>
-        <div className="flex flex-col space-y-1 grow-[1] ">
+
+        {
+          // config
+        }
+        <div className="sm:col-span-2 lg:col-span-6 flex flex-col items-center lg:items-start space-y-1">
           <div className="flex flex-col space-y-1  p-1">
             <div className="flex  flex-row items-end">
               <Image
@@ -402,7 +232,7 @@ const Graph = () => {
                 onClick={() => {
                   setCanvasConfig({
                     ...canvasConfig,
-                    graphType: "vQAP",
+                    ...(defaultConfig as canvasConfigType),
                   });
                 }}
               />
@@ -411,7 +241,7 @@ const Graph = () => {
                 onClick={() => {
                   setCanvasConfig({
                     ...canvasConfig,
-                    graphType: "vQAPF",
+                    ...(defaultConfigVQAPF as canvasConfigType),
                   });
                 }}
               />
@@ -419,29 +249,11 @@ const Graph = () => {
             {isShowSettings && (
               <GraphConfig
                 canvasConfig={canvasConfig}
-                handleFontSize={handleFontSize}
-                handleFontSizeAxis={handleFontSizeAxis}
-                handleWidth={handleWidth}
-                handleHeight={handleHeight}
                 handleColor={handleColor}
-                handleReset={handleReset}
-                handleRAlkali={handleRAlkali}
-                handleXAlkali={handleXAlkali}
-                handleYAlkali={handleYAlkali}
-                handleRatio={handleRatio}
-                handleMaficMineral={handleMaficMineral}
                 handleTheme={handleTheme}
-                handleIsShowColors={handleIsShowColors}
-                handleIsShowAxis={handleIsShowAxis}
-                handleIsShowGrid={handleIsShowGrid}
-                handleIsShowRockNames={handleIsShowRockNames}
-                handleRockNameColor={handleRockNameColor}
-                handleGridColor={handleGridColor}
-                handleIsShowLegend={handleIsShowLegend}
-                handleIsShowCircle={handleIsShowCircle}
-                handleFontSizeLegend={handleFontSizeLegend}
-                handleXLegend={handleXLegend}
-                handleYLegend={handleYLegend}
+                handleNumericValue={handleNumericValue}
+                handleToggle={handleToggle}
+                handleValue={handleValue}
               />
             )}
 

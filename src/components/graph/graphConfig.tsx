@@ -8,41 +8,20 @@ import MySettingHeader from "./mySettingHeader";
 
 const GraphConfig = ({
   canvasConfig,
-  handleFontSize,
-  handleFontSizeAxis,
-  handleWidth,
-  handleHeight,
   handleColor,
   handleReset,
-  handleRAlkali,
-  handleXAlkali,
-  handleYAlkali,
-  handleRatio,
-  handleMaficMineral,
   handleTheme,
-  handleIsShowColors,
-  handleIsShowAxis,
-  handleIsShowGrid,
-  handleIsShowRockNames,
-  handleRockNameColor,
-  handleGridColor,
-  handleIsShowLegend,
-  handleIsShowCircle,
-  handleFontSizeLegend,
-  handleXLegend,
-  handleYLegend,
-  handleIsShowQAP,
-  handleIsShowFAP,
+  handleNumericValue,
+  handleToggle,
+  handleValue,
 }: any) => {
   const [size, setSize] = useState({
     width: canvasConfig.width,
     height: canvasConfig.height,
   });
-  const handleTempWidth = (e: any) => {
-    setSize({ ...size, width: e.target.value });
-  };
-  const handleTempHeight = (e: any) => {
-    setSize({ ...size, height: e.target.value });
+  const handleTempSize = (e: any) => {
+    const { name, value } = e.target;
+    setSize({ ...size, [name]: value });
   };
 
   const keys = Object.keys(canvasConfig.colors);
@@ -59,13 +38,6 @@ const GraphConfig = ({
         }
         <div className="flex flex-row items-center text-sm ">
           <MySettingHeader text="Settings" />
-          <Button
-            size="small"
-            className="bg-red-400 text-white rounded m-1 h-5 hover:bg-red-200"
-            onClick={handleReset}
-          >
-            Reset
-          </Button>
         </div>
 
         {
@@ -76,118 +48,98 @@ const GraphConfig = ({
             <MyCheckbox
               label={"Show Rock Names"}
               checked={canvasConfig.isShowRockNames}
-              onChange={handleIsShowRockNames}
+              onChange={() => handleToggle("isShowRockNames")}
             />
             <MyCheckbox
               label={"Show Colors"}
               checked={canvasConfig.isShowColors}
-              onChange={handleIsShowColors}
+              onChange={() => handleToggle("isShowColors")}
             />
             <MyCheckbox
               label={"Show Axis Names"}
               checked={canvasConfig.isShowAxis}
-              onChange={handleIsShowAxis}
-            />
-            <MyCheckbox
-              label={"Show Axis Markers"}
-              checked={canvasConfig.isShowCircle}
-              onChange={handleIsShowCircle}
+              onChange={() => handleToggle("isShowAxis")}
             />
             <MyCheckbox
               label={"Show Grids"}
               checked={canvasConfig.isShowGrid}
-              onChange={handleIsShowGrid}
+              onChange={() => handleToggle("isShowGrid")}
+            />
+            <MyCheckbox
+              label={"Show Grids Label"}
+              checked={canvasConfig.isShowGridLabel}
+              onChange={() => handleToggle("isShowGridLabel")}
             />
             <MyCheckbox
               label={"Show Legend"}
               checked={canvasConfig.isShowLegend}
-              onChange={handleIsShowLegend}
+              onChange={() => handleToggle("isShowLegend")}
             />
           </div>
           <div className="flex flex-col pl-3">
             <MySlider
-              title={`Font-size [${canvasConfig.fontSize}]`}
+              title={`Plot-size [${canvasConfig.plotSize}]`}
+              name="plotSize"
               min={5}
-              max={40}
+              max={50}
+              value={canvasConfig.plotSize}
+              onChange={handleNumericValue}
+            />
+            <MySlider
+              title={`Font-size [${canvasConfig.fontSize}]`}
+              name="fontSize"
+              min={50}
+              max={200}
               value={canvasConfig.fontSize}
-              onChange={handleFontSize}
+              onChange={handleNumericValue}
             />
             <MySlider
               title={`Axis font-size [${canvasConfig.fontSizeAxis}]`}
-              min={5}
-              max={40}
+              name="fontSizeAxis"
+              min={50}
+              max={200}
               value={canvasConfig.fontSizeAxis}
-              onChange={handleFontSizeAxis}
+              onChange={handleNumericValue}
             />
             <MySlider
               title={`Rotate AFR [${canvasConfig.rAlkali}]`}
+              name="rAlkali"
               min={-2.26}
               max={5}
               step={0.001}
               value={canvasConfig.rAlkali}
-              onChange={handleRAlkali}
-            />
-            <MySlider
-              title={`X AFR [${canvasConfig.xAlkali}]`}
-              min={-17}
-              max={50}
-              step={0.1}
-              value={canvasConfig.xAlkali}
-              onChange={handleXAlkali}
-            />
-            <MySlider
-              title={`Y AFR [${canvasConfig.yAlkali}]`}
-              min={-4.5}
-              max={50}
-              step={0.1}
-              value={canvasConfig.yAlkali}
-              onChange={handleYAlkali}
+              onChange={handleNumericValue}
             />
           </div>
           <div className="flex flex-col pl-3">
-            <MySlider
-              title={`Width [${parseInt(size.width)}]`}
-              min={200}
-              max={1280}
-              step={10}
-              value={size.width}
-              onChange={handleTempWidth}
-              onMouseUp={handleWidth}
-            />
-            <MySlider
-              title={`Height [${parseInt(size.height)}]`}
-              min={200}
-              max={1280}
-              step={10}
-              value={size.height}
-              onMouseUp={handleHeight}
-              onChange={handleTempHeight}
-            />
             {canvasConfig.isShowLegend && (
               <>
                 <MySlider
                   title={`Legend size [${canvasConfig.fontSizeLegend}]`}
-                  min={5}
-                  max={15}
-                  step={0.1}
+                  name="fontSizeLegend"
+                  min={50}
+                  max={200}
+                  step={1}
                   value={canvasConfig.fontSizeLegend}
-                  onChange={handleFontSizeLegend}
+                  onChange={handleNumericValue}
                 />
                 <MySlider
                   title={`X Legend [${canvasConfig.xLegend}]`}
+                  name="xLegend"
                   min={-100}
                   max={500}
                   step={1}
                   value={canvasConfig.xLegend}
-                  onChange={handleXLegend}
+                  onChange={handleNumericValue}
                 />
                 <MySlider
                   title={`Y Legend [${canvasConfig.yLegend}]`}
+                  name="yLegend"
                   min={-200}
                   max={300}
                   step={1}
                   value={canvasConfig.yLegend}
-                  onChange={handleYLegend}
+                  onChange={handleNumericValue}
                 />
               </>
             )}
@@ -204,14 +156,22 @@ const GraphConfig = ({
           {canvasConfig.isShowRockNames && (
             <MyColorInput
               title="Name"
+              name='rockNameColor'
               value={canvasConfig.rockNameColor}
-              onChange={handleRockNameColor}
+              onChange={handleValue}
             />
           )}
           <MyColorInput
             title="Line"
+            name="gridColor"
             value={canvasConfig.gridColor}
-            onChange={handleGridColor}
+            onChange={handleValue}
+          />
+          <MyColorInput
+            title="Axis Name"
+            name="axisColor"
+            value={canvasConfig.axisColor}
+            onChange={handleValue}
           />
         </div>
       </div>
@@ -238,6 +198,7 @@ const GraphConfig = ({
           <div className="grid grid-cols-4">
             {keys.map((k: string, ind: any) => (
               <MyColorInput
+                name='empty'
                 key={ind}
                 title={k}
                 value={canvasConfig.colors[`${k}`]}

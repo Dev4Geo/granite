@@ -4,6 +4,12 @@ export const colorMap: { [key: string]: string } = {
   B: "blue",
   Custom: "Custom",
 };
+export type QAP = {
+  Q: number;
+  A: number;
+  P: number;
+  symbol: symbolType;
+};
 
 export type themeType =
   | "earth"
@@ -114,11 +120,11 @@ export const colorTheme = {
 };
 
 export type canvasConfigType = {
-  width: number;
-  height: number;
+  ratio: number;
   fontSize: number;
   fontSizeLegend: number;
   fontSizeAxis: number;
+  fontSizeAxisLabel: number;
   colors: {
     "Quartz Rich": string;
     "Alkali Feldspar Rhyolite": string;
@@ -135,32 +141,35 @@ export type canvasConfigType = {
   xAlkali: number;
   yAlkali: number;
   rAlkali: number;
-  ratio: number; // unused
   maficMineral: number;
   // theme: 'earth'|'forest'|'desert'|'mountain'|'ocean'|'volcanic';
   isShowColors: boolean;
   isShowAxis: boolean;
   isShowGrid: boolean;
+  isShowGridLabel: boolean;
   isShowRockNames: boolean;
   rockNameColor: string;
   gridColor: string;
+  gridWidth: number;
+  axisColor: string;
   isShowLegend: boolean;
   isShowCircle: boolean;
   xLegend: number;
   yLegend: number;
+  colorLegend: string;
   graphType: graphType;
+  plotSize: number;
 };
 
 const theme = colorTheme.olivine;
 export type graphType = "vQAPF" | "vQAP";
-const debug = true;
 
 export const defaultConfig: canvasConfigType = {
-  width: 520,
-  height: 520,
-  fontSize: debug ? 10 : 12,
-  fontSizeLegend: 9,
-  fontSizeAxis: 15,
+  ratio: 1,
+  fontSize: 100, // rhyolite
+  fontSizeLegend: 70, // legend
+  fontSizeAxis: 110, // QAP
+  fontSizeAxisLabel: 80, // 10,20,35
   colors: {
     "Quartz Rich": theme[0],
     "Alkali Feldspar Rhyolite": theme[1],
@@ -177,36 +186,29 @@ export const defaultConfig: canvasConfigType = {
   xAlkali: 0,
   yAlkali: 0,
   rAlkali: 0,
-  ratio: 0,
   maficMineral: 20,
   isShowColors: true,
   isShowAxis: true,
   isShowGrid: true,
+  isShowGridLabel: true,
   isShowRockNames: true,
   rockNameColor: "#303030",
   gridColor: "#878787",
+  gridWidth: 5,
+  axisColor: "#141414",
   isShowLegend: false,
   isShowCircle: true,
-  xLegend: -30,
+  xLegend: 0,
   yLegend: 0,
-  graphType: "vQAPF",
-};
-
-export const defaultConfigMobileVQAP = {
-  fontSizeLegend: 6,
-  xLegend: -35,
-  yLegend: -30,
+  colorLegend: "#303030",
+  graphType: "vQAP",
+  plotSize: 15,
 };
 
 export const defaultConfigVQAPF = {
-  width: 700,
-  height: 700,
-  fontSize: 11,
-};
-
-export type QAP = {
-  Q: number;
-  A: number;
-  P: number;
-  symbol: symbolType;
+  fontSize: 70,
+  fontSizeAxisLabel: 65, // 10,20,35
+  fontSizeAxis: 85, // QAPF
+  xLegend: 115,
+  graphType: "vQAPF",
 };

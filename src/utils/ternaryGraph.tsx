@@ -1,4 +1,15 @@
 import { canvasConfigType, graphType, symbolType } from "@/types/types";
+import {
+  VQAP,
+  VQAP4,
+  VQAPGridLabel,
+  VQAPAxisCircle,
+  VQAPAxisLabel,
+  VQAPF,
+  VQAPFGridLabel,
+  VQAPFAxisCircle,
+  VQAPFAxisLabel,
+} from "./drawInfo";
 
 type line = [number, number, number];
 
@@ -6,8 +17,9 @@ class TernaryGraph {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private offset: number;
-  private w: number;
-  private h: number;
+  initialWidth: number;
+  w: number;
+  h: number;
   private left: { x: number; y: number };
   private right: { x: number; y: number };
   private top_: { x: number; y: number };
@@ -25,30 +37,35 @@ class TernaryGraph {
     this.canvas = canvas;
     this.graphType = config.graphType;
     this.nAxis = ["vQAPF"].includes(this.graphType) ? 4 : 3;
-    const ratio = window.devicePixelRatio;
     this.ctx = canvas.getContext("2d")!;
-    this.offset = 30;
-    this.w = this.nAxis <= 3 ? config.width : config.width / 1.5;
-    this.h = config.height;
-    canvas.width = this.w * ratio;
-    canvas.height = this.h * ratio;
-    canvas.style.width = `${this.w}px`;
-    canvas.style.height = `${this.h}px`;
-    this.ctx.scale(ratio, ratio);
+
+    // canvas size
+    canvas.width = 4000;
+    canvas.height = 4000;
+    this.offset = 200;
+
+    const initial = canvas.width;
+    this.initialWidth = initial;
+    const s = initial * config.ratio;
+
+    // drawing size
+    this.w = this.nAxis <= 3 ? s : s / 1.5;
+    this.h = initial;
 
     if (this.nAxis <= 3) {
       this.left = { x: this.offset, y: this.h - this.offset };
       this.right = { x: this.w - this.offset, y: this.h - this.offset };
-      this.top_ = { x: this.w / 2, y: this.offset };
+      this.top_ = { x: this.w * 0.5, y: this.offset };
       this.bottom_ = { x: 0, y: 0 };
     } else {
-      this.left = { x: this.offset, y: this.h * 0.5 };
+      const xShift = (initial - this.w) * 0.5;
+      this.left = { x: xShift + this.offset, y: initial * 0.5 };
       this.right = {
-        x: this.w - this.offset,
-        y: this.h * 0.5,
+        x: initial - this.offset - xShift,
+        y: initial * 0.5,
       };
-      this.top_ = { x: this.w / 2, y: this.offset };
-      this.bottom_ = { x: this.w / 2, y: this.h - this.offset };
+      this.top_ = { x: initial / 2, y: this.offset };
+      this.bottom_ = { x: initial / 2, y: initial - this.offset };
     }
     this.d5 = [0, 0, 0];
     this.d20 = [0, 0, 0];
@@ -72,63 +89,153 @@ class TernaryGraph {
     // mafic 35
     const andesite =
       this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
-    const andesiteColor = "#f0A1c0";
-    const data = [
-      [0, 10, 0, 10, "#f011f0", "F1", 0, 0],
-      [10, 35, 0, 10, "#f0A1f0", "Foid-Bearing\nTrachyte", 0, 0],
-      [35, 65, 0, 10, "#a0A1f0", "Foid-Bearing\nLatite", 0, 0],
-      [65, 100, 0, 10, andesiteColor, "", 0, 0],
-      [65, 100, 0, 20, andesiteColor, andesite, 7, 18, this.top_],
-      [0, 10, 10, 60, "#a011f0", "Phonolite", -2, 0, this.bottom_, 1.02],
-      [10, 50, 10, 60, "#a0A1f0", "Tephritic\nPhonolite", 0, 0],
-      [50, 90, 10, 60, "#c0A1c0", "Phonolitic\nBasanite", 0, 0],
-      [90, 100, 10, 60, "#a0A1c0", "Basanite", 2, 0, this.bottom_, -1.0],
-      [
-        0,
-        50,
-        60,
-        90,
-        "#a0A1c0",
-        "Phonlitic\nFoidite",
-        20,
-        -12,
-        this.bottom_,
-        0,
-        "end",
-      ],
-      [
-        50,
-        100,
-        60,
-        90,
-        "#f0A1c0",
-        "Basanitic\nFoidite",
-        -20,
-        -12,
-        this.bottom_,
-        0,
-        "start",
-      ],
-      [0, 100, 90, 100, "#f0A1c0", "F2", 0, -3],
-    ];
+    const data = VQAPF(this, andesite);
 
     data.forEach((d: any) => {
       this.doFill.apply(this, d);
     });
-    this.drawEdge4("A", "P", "Q", "F");
-    this.drawLineParallelQ(20, draw, this.top_, "20");
-    this.drawLineParallelQ(60, draw, this.top_, "60");
-    const dm10 = this.drawLineParallelQ(10, draw, this.bottom_, "10");
-    const dm60 = this.drawLineParallelQ(60, draw, this.bottom_, "60");
-    const dm90 = this.drawLineParallelQ(90, draw, this.bottom_, "90");
+    this.drawEdge(VQAPFAxisLabel, VQAPFAxisCircle);
+    const dm10 = this.drawLineParallelQ(10, draw, this.bottom_);
+    const dm60 = this.drawLineParallelQ(60, draw, this.bottom_);
+    const dm90 = this.drawLineParallelQ(90, draw, this.bottom_);
     this.drawLineParallelQ(0, false, this.bottom_);
-    this.drawVerticalQ(10, dm60, draw, null, "10", "b", 27, 39);
-    this.drawVerticalQ(50, dm90, draw, dm10, "50", "b", -8, 7);
-    this.drawVerticalQ(90, dm60, draw, dm10, "90", "b", -13, 7);
+
+    // this.drawVerticalQ(65, d60, draw);
+    this.drawVerticalQ(10, dm60, draw);
+    this.drawVerticalQ(50, dm90, draw, dm10);
+    this.drawVerticalQ(90, dm60, draw, dm10);
     this.drawVerticalQ(35, dm10, draw);
     this.drawVerticalQ(65, dm10, draw);
+
+    // draw upper triangle
     this.drawVolcanicQAP(false);
     this.drawFrameBottom(0, 65);
+
+    this.drawLegend(
+      -100,
+      200,
+      "IUGS Classification",
+      `2b. Volcanic/Aphanitic Rocks`,
+      `Q = Quartz
+A = Alkali feldspar
+P = Plagioclase feldspar
+F = Feldspathoid (Foid)
+`,
+      `Q1. Alkali feldspar trachyte
+Q2. Quartz alkali feldspar trachyte
+F1. Foid-bearing alkali feldspar trachyte
+F2. Foidite
+`,
+    );
+  }
+
+  drawVolcanicQAP(nAxis3 = true) {
+    const colors = this.config.colors;
+    const data = nAxis3 ? VQAP(this) : VQAP4(this);
+
+    const andesite =
+      this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
+    // fill color and text
+    data.forEach((d: any) => {
+      this.doFill.apply(this, d);
+    });
+    if (nAxis3) {
+      const data2 = [
+        [65, 100, 0, 20, colors["Andesite"], andesite, 0, 28, this.top_],
+      ];
+      data2.forEach((d: any) => {
+        this.doFill.apply(this, d);
+      });
+    }
+    if (nAxis3) {
+      this.drawTriangleFrame(this.left, this.top_, this.right);
+      this.drawEdge(VQAPAxisLabel, VQAPAxisCircle);
+    }
+    const draw = this.config.isShowGrid;
+    const d20 = this.drawLineParallelQ(20, draw);
+    const d60 = this.drawLineParallelQ(60, draw);
+    if (this.config.isShowGridLabel) {
+      const d = nAxis3 ? VQAPGridLabel(this) : VQAPFGridLabel(this);
+      d.forEach((d: any) => {
+        this.drawText({
+          horizontal: d[0] as number,
+          vertical: d[1] as number,
+          text: d[2] as string,
+          offsetX: d[3] as number,
+          offsetY: d[4] as number,
+          fontSize: d[5] as number,
+          top: d[6],
+        });
+      });
+    }
+    this.drawVerticalQ(10, d60, draw);
+    this.drawVerticalQ(35, d20, draw);
+    this.drawVerticalQ(65, d60, draw);
+
+    this.drawFivePercentLine(draw);
+    this.d5 = this.drawLineParallelQ(5, false);
+    this.d20 = d20;
+    this.d60 = d60;
+    if (nAxis3) {
+      this.drawLegend(
+        400,
+        200,
+        "IUGS Classification",
+        `Volcanic/Aphanitic Rocks
+2a. Volcanic rocks with quartz`,
+        `Q = Quartz
+A = Alkali feldspar
+P = Plagioclase feldspar
+`,
+        `Q1. Alkali feldspar trachyte
+Q2. Quartz alkali feldspar trachyte
+`,
+      );
+    }
+  }
+
+  drawLegend(
+    offsetX: number,
+    offsetY: number,
+    title: string,
+    subtitle: string,
+    ...texts: string[]
+  ) {
+    if (!this.config.isShowLegend) {
+      return;
+    }
+
+    const fontSize = this.config.fontSizeLegend;
+    const x = this.config.xLegend + offsetX;
+    const oldColor = this.ctx.fillStyle;
+    const ctx = this.ctx;
+    let nextY = offsetY;
+
+    // align start
+    ctx.textAlign = "start";
+    ctx.fillStyle = this.config.colorLegend;
+    ctx.font = `bold ${fontSize * 1.5}px Arial`;
+    ctx.fillText(title, x, nextY);
+    nextY += fontSize;
+
+    ctx.font = `${fontSize * 1.1}px Arial`;
+    const subtitles = subtitle.split("\n");
+    subtitles.forEach((line) => {
+      ctx.fillText(line, x, nextY * 1.1);
+      nextY += fontSize * 1.1;
+    });
+    nextY += fontSize * 0.9;
+
+    ctx.font = `${fontSize}px Arial`;
+    texts.forEach((text) => {
+      const lines = text.split("\n");
+      lines.forEach((line) => {
+        ctx.fillText(line, x, nextY);
+        nextY += fontSize;
+      });
+      nextY -= fontSize * 0.5;
+    });
+    ctx.fillStyle = oldColor;
   }
 
   findCenter(box: number[][]) {
@@ -145,6 +252,39 @@ class TernaryGraph {
 
     return [centerX, centerY];
   }
+  drawText({
+    horizontal,
+    vertical,
+    text,
+    offsetX,
+    offsetY,
+    fontSize,
+    top = this.top_,
+  }: {
+    horizontal: number;
+    vertical: number;
+    text: string;
+    offsetX: number;
+    offsetY: number;
+    fontSize: number;
+    top: { x: number; y: number };
+  }) {
+    const ratio = horizontal / 100;
+    const [y, xa, xb] = this.drawLineParallelQ(vertical, false, top);
+    const x = xa + (xb - xa) * ratio;
+    this.drawTextWithLineBreaks(
+      text,
+      [
+        [x, y],
+        [x, y - (this.h / 500) * 8],
+      ],
+      offsetX,
+      offsetY,
+      0,
+      "start",
+      fontSize,
+    );
+  }
 
   drawTextWithLineBreaks(
     text: string,
@@ -159,9 +299,10 @@ class TernaryGraph {
     const ctx = this.ctx;
     let [centerX, centerY] = this.findCenter(box);
     centerX += offsetX;
-    centerY += this.config.fontSize * 0.3 + offsetY;
+    centerY += offsetY;
     const lines = text.split("\n");
     const startY = centerY - (lines.length / 2) * lineHeight + lineHeight / 2;
+    fontSize = fontSize;
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = textAlign;
     lines.forEach((line, index) => {
@@ -180,113 +321,10 @@ class TernaryGraph {
     });
   }
 
-  drawVolcanicQAP(drawFrame = true) {
-    const colors = this.config.colors;
-    const data = [
-      [
-        0,
-        100,
-        60,
-        100,
-        colors["Quartz Rich"],
-        "Quartz\nRich",
-        0,
-        10,
-        this.top_,
-      ],
-      [
-        0,
-        10,
-        60,
-        20,
-        colors["Alkali Feldspar Rhyolite"],
-        "Alkali Feldspar Rhyolite",
-        2,
-        0,
-        this.top_,
-        -1.096 + this.config.rAlkali,
-      ],
-      [10, 65, 60, 20, colors["Rhyolite"], "Rhyolite", 0, 0, this.top_],
-      [65, 100, 60, 20, colors["Dacite"], "Dacite", 0, 0, this.top_],
-      [0, 10, 5, 20, colors["Q2"], "Q2", 0, 0, this.top_],
-      [
-        10,
-        35,
-        5,
-        20,
-        colors["Quartz Trachyte"],
-        "Quartz\nTrachyte",
-        0,
-        0,
-        this.top_,
-      ],
-      [
-        35,
-        65,
-        5,
-        20,
-        colors["Quartz Latite"],
-        "Quartz\nLatite",
-        0,
-        0,
-        this.top_,
-      ],
-      [0, 10, 0, 5, colors["Q1"], "Q1", 0, 0, this.top_],
-      [10, 35, 0, 5, colors["Trachyte"], "Trachyte", 0, 0, this.top_],
-      [35, 65, 0, 5, colors["Latite"], "Latite", 0, 0, this.top_],
-    ];
-
-    data.forEach((d: any) => {
-      this.doFill.apply(this, d);
-    });
-    if (drawFrame) {
-      const data2 = [
-        [65, 100, 0, 20, colors["Andesite"], "Andesite", 0, 0, this.top_],
-      ];
-      data2.forEach((d: any) => {
-        this.doFill.apply(this, d);
-      });
-    }
-    if (drawFrame) {
-      this.drawTriangleFrame(this.left, this.top_, this.right);
-      this.drawEdgePoints();
-    }
-    const draw = this.config.isShowGrid;
-    const d20 = this.drawLineParallelQ(20, draw);
-    const d60 = this.drawLineParallelQ(60, draw);
-    this.drawVerticalQ(10, d60, draw, null, "10", "b", 44,-69);
-    this.drawVerticalQ(35, d20, draw, null, "35", "a", 0,-5);
-    this.drawVerticalQ(65, d60, draw, null, "65", "b", -21,-69);
-
-    this.drawFivePercentLine(draw);
-    this.d5 = this.drawLineParallelQ(5, false);
-    this.d20 = d20;
-    this.d60 = d60;
-  }
-
   getCenter(lists: number[][]) {
     const x = lists.map((l) => l[0]).reduce((a, b) => a + b) / lists.length;
     const y = lists.map((l) => l[1]).reduce((a, b) => a + b) / lists.length;
     return [x, y];
-  }
-
-  fillText(text: string, box: number[][], offsetX = 0, offsetY = 0) {
-    if (!this.config.isShowRockNames) {
-      return;
-    }
-    let [x, y] = this.getCenter(box);
-    // x -= text.length * 5;
-    // y += 5;
-    // relative to font size
-    x -= text.length * this.fontSize * 0.2;
-    y += this.fontSize * 0.3;
-    x += offsetX;
-    y += offsetY;
-
-    const oldColor = this.ctx.fillStyle;
-    this.ctx.fillStyle = this.config.rockNameColor;
-    this.ctx.fillText(text, x, y);
-    this.ctx.fillStyle = oldColor;
   }
 
   fillRotatedText(text: string, box: number[][]) {
@@ -295,32 +333,14 @@ class TernaryGraph {
     }
     let [x, y] = this.getCenter(box);
     this.ctx.save();
-    this.ctx.translate(
-      x - this.w / (20 + this.config.xAlkali),
-      y + this.h / (7 + this.config.yAlkali),
-    );
-    const ratio = this.w / this.h;
-    this.ctx.rotate(-Math.PI / (ratio + 1.66 + this.config.rAlkali));
+    this.ctx.translate(x - this.config.xAlkali, y + this.config.yAlkali);
+    this.ctx.rotate(-Math.PI / (1.66 + this.config.rAlkali));
     this.ctx.fillStyle = this.config.rockNameColor;
     this.ctx.fillText(text, 0, 0);
     this.ctx.restore();
   }
 
-  drawArea(
-    color: string,
-    title: string,
-    box: number[][],
-    offsetX = 0,
-    offsetY = 0,
-  ) {
-    this.fillColor(color, box);
-    this.fillText(title, box, offsetX, offsetY);
-  }
-
   fillColor(color: string, points: number[][]) {
-    if (!this.config.isShowColors) {
-      return;
-    }
     const oldColor = this.ctx.fillStyle;
     const oldAlpha = this.ctx.globalAlpha;
     this.ctx.fillStyle = color;
@@ -338,15 +358,15 @@ class TernaryGraph {
 
   plot(Q: number, A: number, P: number, symbol: symbolType) {
     const p = this.getCoordinate(Q, A, P);
-    this.drawPoint(p, symbol);
+    this.drawPoint(p, symbol, this.config.plotSize);
   }
 
-  drawPoint(point: number[], symbol: string) {
+  drawPoint(point: number[], symbol: string, size = 5) {
     const [x, y] = point;
     const oldColor = this.ctx.fillStyle;
     this.ctx.beginPath();
     this.ctx.fillStyle = symbol;
-    this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+    this.ctx.arc(x, y, size, 0, Math.PI * 2);
     this.ctx.fill();
     this.ctx.fillStyle = oldColor;
   }
@@ -366,7 +386,7 @@ class TernaryGraph {
     if (!draw) {
       return;
     }
-    const ratio = 5 / 100;
+    const ratio = 0.05;
     const y = this.left.y + (this.top_.y - this.left.y) * ratio;
     const xAQ = this.left.x + (this.top_.x - this.left.x) * ratio;
     const xPQ = this.right.x + (this.top_.x - this.right.x) * ratio;
@@ -389,8 +409,8 @@ class TernaryGraph {
     s: line | null = null,
     text: string = "",
     textPos: "a" | "b" = "a",
-    textOffestX: number = 0,
-    textOffsetY: number = 0,
+    offestX: number = 0,
+    offsetY: number = 0,
   ) {
     if (!draw) {
       return;
@@ -412,18 +432,21 @@ class TernaryGraph {
 
     const oldColor = this.ctx.strokeStyle;
     this.ctx.strokeStyle = this.config.gridColor;
+    this.ctx.lineWidth = this.config.gridWidth;
     this.ctx.beginPath();
     this.ctx.moveTo(xAP, ys);
     this.ctx.lineTo(x, y);
+
     this.ctx.stroke();
     this.ctx.strokeStyle = oldColor;
 
     const pos = textPos === "a" ? [x, y] : [xAP, ys];
-    this.drawTextWithLineBreaks(text, [pos], textOffestX, textOffsetY);
+    this.drawTextWithLineBreaks(text, [pos], offestX, offsetY);
   }
 
   drawTriangleFrame(...lines: { x: number; y: number }[]) {
     const oldColor = this.ctx.strokeStyle;
+    this.ctx.lineWidth = this.config.gridWidth;
     this.ctx.strokeStyle = this.config.gridColor;
     this.ctx.beginPath();
     // this.ctx.moveTo(this.left.x, this.left.y);
@@ -442,91 +465,28 @@ class TernaryGraph {
     this.ctx.strokeStyle = oldColor;
   }
 
-  drawEdgePoints() {
+  drawEdge(axisLabelFunc: any, circleFunc: any) {
     // set font size using config
+    const ctx = this.ctx;
     if (this.config.isShowAxis) {
-      const oldFont = this.ctx.font;
-      this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
-      this.ctx.fillText("Q", this.w / 2 - 7, 20);
-      this.ctx.fillText("A", this.offset / 2.5, this.h - this.offset / 2);
-      this.ctx.fillText(
-        "P",
-        this.w - this.offset / 1.3,
-        this.h - this.offset / 2,
-      );
-      this.ctx.font = oldFont;
+      ctx.save()
+      const fontSize = this.config.fontSizeAxis;
+      ctx.fillStyle = this.config.axisColor;
+      ctx.font = `${fontSize}px Arial`;
+      const d = axisLabelFunc(this);
+      d.forEach((d: any) => {
+        this.ctx.fillText(d[0], d[1], d[2]);
+      });
+      ctx.restore()
     }
 
     if (this.config.isShowCircle) {
-      const c = "#505050";
-      this.drawPoint([this.left.x, this.left.y], c);
-      this.drawPoint([this.right.x, this.right.y], c);
-      this.drawPoint([this.top_.x, this.top_.y], c);
-    }
-  }
-  drawEdge4(left: string, right: string, top: string, bottom: string) {
-    // set font size using config
-    if (this.config.isShowAxis) {
-      const oldFont = this.ctx.font;
-      this.ctx.font = `${this.config.fontSizeAxis}px Arial`;
-      this.drawTextWithLineBreaks(
-        top,
-        [
-          [this.top_.x, this.top_.y],
-          [this.top_.x, 0],
-        ],
-        0,
-        0,
-        0,
-        "center",
-        this.config.fontSizeAxis,
-      );
-      this.drawTextWithLineBreaks(
-        bottom,
-        [
-          [this.bottom_.x, this.bottom_.y],
-          [this.bottom_.x, this.h],
-        ],
-        0,
-        0,
-        0,
-        "center",
-
-        this.config.fontSizeAxis,
-      );
-      this.drawTextWithLineBreaks(
-        left,
-        [
-          [this.left.x, this.left.y],
-          [this.left.x - this.offset, this.left.y],
-        ],
-        0,
-        0,
-        0,
-        "center",
-        this.config.fontSizeAxis,
-      );
-      this.drawTextWithLineBreaks(
-        right,
-        [
-          [this.right.x, this.right.y],
-          [this.right.x + this.offset, this.right.y],
-        ],
-        0,
-        0,
-        0,
-        "center",
-        this.config.fontSizeAxis,
-      );
-      this.ctx.font = oldFont;
-    }
-
-    if (this.config.isShowCircle) {
-      const c = "#505050";
-      this.drawPoint([this.left.x, this.left.y], c);
-      this.drawPoint([this.right.x, this.right.y], c);
-      this.drawPoint([this.top_.x, this.top_.y], c);
-      this.drawPoint([this.bottom_.x, this.bottom_.y], c);
+      ctx.save()
+      const d = circleFunc(this);
+      d.forEach((d: any) => {
+        this.drawPoint([d[0], d[1]], d[2]);
+      });
+      ctx.restore()
     }
   }
 
@@ -545,6 +505,7 @@ class TernaryGraph {
     if (draw) {
       const oldColor = this.ctx.strokeStyle;
       this.ctx.strokeStyle = this.config.gridColor;
+      this.ctx.lineWidth = this.config.gridWidth;
       this.ctx.beginPath();
       this.ctx.moveTo(xAQ, y);
       this.ctx.lineTo(xPQ, y);
@@ -559,6 +520,9 @@ class TernaryGraph {
   }
 
   drawFrameBottom(sPercent: number, dPercent: number) {
+    if (!this.config.isShowGrid) {
+      return;
+    }
     const xa = this.left.x + ((this.right.x - this.left.x) * sPercent) / 100;
     const xb = this.left.x + ((this.right.x - this.left.x) * dPercent) / 100;
     const y = this.left.y;
@@ -600,17 +564,22 @@ class TernaryGraph {
       [rightBottom, lineBottom[0]],
       [leftBottom, lineBottom[0]],
     ];
-    this.fillColor(color, box);
-    // this.fillText(title, box, offsetX, offsetY);
 
-    this.drawTextWithLineBreaks(
-      title,
-      box,
-      offsetX,
-      offsetY,
-      rotatedText,
-      textAlign,
-    );
+    if (this.config.isShowColors) {
+      this.fillColor(color, box);
+    }
+
+    if (this.config.isShowRockNames) {
+      // this.fillText(title, box, offsetX, offsetY);
+      this.drawTextWithLineBreaks(
+        title,
+        box,
+        offsetX,
+        offsetY,
+        rotatedText,
+        textAlign,
+      );
+    }
   }
 }
 

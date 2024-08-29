@@ -53,7 +53,11 @@ export default function QAPForm({ onSave }: any) {
     }
 
     const color = colorMap[symbol];
-    onSave(QAP, color);
+    onSave({
+      Q: QAP.Q||0,
+      A: QAP.A||0,
+      P: QAP.P||0,
+    }, color);
     setQAP({ Q: 0, A: 0, P: 0 });
   };
 
