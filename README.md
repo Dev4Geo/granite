@@ -12,7 +12,7 @@ Check this tool here >>> [Granite](https://dev4geo-granite.vercel.app/)
 - [x] fix long color names
 - [x] menu bar
 - [x] footer links
-- [ ] alternative solutions
+- [x] alternative solutions
 - [ ] chart opacity
 - [ ] mouse hover show %
 - [ ] theme color preview 
