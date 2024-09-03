@@ -22,8 +22,8 @@ import MaficSlider from "@/components/graph/maficSlider";
 import MyFooter from "@/components/shared/myFooter";
 import OvilineSlider from "@/components/graph/olivineSlider";
 
-const debug = true;
-// const debug = false;
+// const debug = true;
+const debug = false;
 
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
