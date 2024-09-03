@@ -23,6 +23,8 @@ const ChartsPage = ({ }) => {
             alt={""}
             width={monsterSize}
             height={monsterSize}
+            priority={false}
+            className="w-auto"
           />
           <div className="text-gray-500 font-bold ml-2 mb-[-0.25rem]">
             All Charts

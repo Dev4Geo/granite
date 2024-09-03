@@ -16,6 +16,8 @@ const AltSolutions = () => {
             alt={""}
             width={monsterSize}
             height={monsterSize}
+            className="w-auto"
+            priority={true}
           />
           <div className="text-gray-500 font-bold ml-2 my-4 text-lg">
             Alternative Solutions

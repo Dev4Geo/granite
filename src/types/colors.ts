@@ -1,6 +1,6 @@
 export const colorTheme = {
   olivine: [
-    "#FFF",
+    "#F9F9F9",
     "#A6A6A6",
     "#D9D9D9",
     "#63C21B",

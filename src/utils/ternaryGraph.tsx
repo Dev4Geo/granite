@@ -410,7 +410,11 @@ Q2. Quartz alkali feldspar trachyte
     right: number,
     bottom: number = 0,
     symbol: symbolType = "red",
+    isShow: boolean = true,
   ) {
+    if (!isShow) {
+      return;
+    }
     const p = this.getCoordinate(top, left, right, bottom);
     this.drawPoint(p, symbol, this.config.plotSize);
   }
@@ -425,23 +429,22 @@ Q2. Quartz alkali feldspar trachyte
     this.ctx.fillStyle = oldColor;
   }
 
-  getCoordinate(Q: number, A: number, P: number, F: number) {
-    [Q, A, P, F] = [
-      Number(Q) || 0,
-      Number(A) || 0,
-      Number(P) || 0,
-      Number(F) || 0,
+  getCoordinate(top: number, left: number, right: number, bottom: number) {
+    [top, left, right, bottom] = [
+      Number(top) || 0,
+      Number(left) || 0,
+      Number(right) || 0,
+      Number(bottom) || 0,
     ];
-    const top = Q > F ? Q : F;
-    const top_ = Q > F ? this.top_ : this.bottom_;
-    console.log(Q > F ? "top" : "bot");
-    const sum = top + A + P;
-    const percentageTop = top / sum;
-    const percentageA = A / sum;
-    const percentageP = P / sum;
-    const ratioX = percentageP / (percentageA + percentageP);
+     top = top > bottom ? top : bottom;
+    const top_ = top > bottom ? this.top_ : this.bottom_;
+    const sum = top + left + right;
+    const ratioTop = top / sum;
+    const ratioLeft = left / sum;
+    const ratioRight = right / sum;
+    const ratioX = ratioRight / (ratioLeft + ratioRight);
     const [y, x1, x2] = this.drawLineParallelQ(
-      percentageTop * 100,
+      ratioTop * 100,
       false,
       top_,
     );

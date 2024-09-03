@@ -27,24 +27,23 @@ const debug = true;
 
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isShowSettings, setIsShowSettings] = useState(false || debug);
+  const [isShowSettings, setIsShowSettings] = useState(false );
   const [data, setData] = useState<MyDataType[]>([
     {
-      top: 20.11,
-      left: 88.88,
-      right: 9.5,
-      bottom: 0,
+      Q: 20.11,
+      A: 88.88,
+      P: 9.5,
+      F: 0,
       symbol: "blue",
     },
     {
-      top: 20,
-      left: 70.5,
-      right: 9.5,
-      bottom: 0,
+      Q: 20,
+      A: 70.5,
+      P: 9.5,
+      F: 0,
       symbol: "red",
     },
   ]);
-  const [graph, setGraph] = useState<TernaryGraph | null>(null);
   const [canvasConfig, setCanvasConfig] =
     useState<canvasConfigType>(defaultConfig);
 
@@ -53,29 +52,31 @@ const Graph = () => {
     if (!canvas) return;
     const g = new TernaryGraph(canvas, canvasConfig);
     g.drawTriangle();
-    setGraph(g);
     // loop plot in data
     data.forEach((d) => {
-      g.plot(d.top, d.left, d.right, d.bottom, d.symbol as symbolType);
+      let top = d.Q;
+      let bottom = d.F;
+      let isShow = true;
+      if (canvasConfig.graphType === 'vFAP'){
+        top = d.F;
+        bottom = d.Q;
+        if (d.Q > 0)  isShow = false;
+      }
+      if (canvasConfig.graphType === 'vQAP'){
+        if (d.F > 0) isShow = false;
+      }
+      g.plot(top, d.A, d.P, bottom, d.symbol as symbolType, isShow);
     });
   }, [canvasRef, canvasConfig, data]);
 
   const handleSave = (QAP: any, symbol: any) => {
-    console.log(QAP, symbol);
-    let Q = parseFloat(QAP.top);
-    let A = parseFloat(QAP.left);
-    let P = parseFloat(QAP.right);
-    let F = parseFloat(QAP.bottom);
-
-    // save to data
-    graph?.plot(Q, A, P, F, symbol);
     setData((prev) => [
       ...prev,
       {
-        top: QAP.top,
-        left: QAP.left,
-        right: QAP.right,
-        bottom: QAP.bottom,
+        Q: QAP.Q,
+        A: QAP.A,
+        P: QAP.P,
+        F: QAP.F,
         symbol,
       },
     ]);
@@ -153,7 +154,7 @@ const Graph = () => {
     setData([]);
   };
 
-  const bottomLogoSize = 30;
+  const FLogoSize = 30;
 
   useEffect(() => {
     if (!debug) return;
@@ -225,8 +226,9 @@ const Graph = () => {
               <Image
                 src={"/monster.png"}
                 alt={""}
-                width={bottomLogoSize}
-                height={bottomLogoSize}
+                width={FLogoSize}
+                height={FLogoSize}
+                className="w-auto"
               />
               <div className="text-gray-500 font-bold ml-2">Plotter</div>
               <IconButton

@@ -25,18 +25,28 @@ const Record = ({
   axisNames: string[];
 }) => {
   const nAxis = axisNames.length;
+  const isFAP = nAxis === 3 && axisNames[0] === "F";
   assert(nAxis === 3 || nAxis === 4, "nAxis should be 3 or 4");
-  const top = dat.top || 0;
-  const left = dat.left || 0;
-  const right = dat.right || 0;
-  const bottom = dat.bottom || 0;
-  const total = top + left + right + bottom;
-  const pTop = ((top / total) * 100).toFixed(2);
-  const pLeft = ((left / total) * 100).toFixed(2);
-  const pRight = ((right / total) * 100).toFixed(2);
-  const pBottom = ((bottom / total) * 100).toFixed(2);
-  const data = [top, left, right];
-  if (nAxis === 4) data.push(bottom);
+  const Q = dat.Q || 0;
+  const A = dat.A || 0;
+  const P = dat.P || 0;
+  const F = dat.F || 0;
+  const total = Q + A + P + F;
+  const pQ = ((Q / total) * 100).toFixed(2);
+  const pA = ((A / total) * 100).toFixed(2);
+  const pP = ((P / total) * 100).toFixed(2);
+  const pF = ((F / total) * 100).toFixed(2);
+  let data;
+  let caption;
+  if (!isFAP) {
+    data = [Q, A, P];
+    caption = `Total=${total.toFixed(2)} Q=${pQ}% A=${pA}% P=${pP}%`;
+    if (nAxis === 4) data.push(F);
+    caption = `Total=${total.toFixed(2)} Q=${pQ}% A=${pA}% P=${pP}% F=${pF}%`;
+  } else {
+    data = [F, A, P];
+    caption = `Total=${total.toFixed(2)} F=${pF}% A=${pA}% P=${pP}%`;
+  }
 
   return (
     <div className="flex flex-row bg-gray-50 w-full shadow justify-between">
@@ -48,9 +58,7 @@ const Record = ({
           ))}
         </div>
         <div className="hidden lg:flex flex-row text-[0.7rem] w-[20rem]">
-          Total={total.toFixed(2)} {axisNames[0]}={pTop}% {axisNames[1]}={pLeft}
-          % {axisNames[2]}={pRight}%{" "}
-          {nAxis === 4 && `${axisNames[3]}=${pBottom}%`}
+          {caption}
         </div>
       </div>
       <IconButton

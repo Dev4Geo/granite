@@ -28,7 +28,8 @@ function InputBox({ label, name, value, onChange }: inputBoxProps) {
 
 export default function QAPForm({ onSave, axisNames }: any) {
   const nAxis = axisNames.length;
-  const [data, setData] = useState({ top: 20, left: 70, right: 10, bottom: 0 });
+  const isFAP = nAxis === 3 && axisNames[0] === "F";
+  const [data, setData] = useState({ Q: 0, A: 70, P: 10, F: 0 });
   const [total, setTotal] = useState(100);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,17 +39,16 @@ export default function QAPForm({ onSave, axisNames }: any) {
   };
 
   useEffect(() => {
-    setTotal((data.top || 0) + (data.left || 0) + (data.right || 0));
+    setTotal((data.Q || 0) + (data.A || 0) + (data.P || 0) + (data.F || 0));
   }, [data]);
 
-  const top: string = (((data.top || 0) / total) * 100).toFixed(2);
-  const left: string = (((data.left || 0) / total) * 100).toFixed(2);
-  const right: string = (((data.right || 0) / total) * 100).toFixed(2);
-  const bottom: string = (((data.bottom || 0) / total) * 100).toFixed(2);
+  const Q: string = (((data.Q || 0) / total) * 100).toFixed(2);
+  const A: string = (((data.A || 0) / total) * 100).toFixed(2);
+  const P: string = (((data.P || 0) / total) * 100).toFixed(2);
+  const F: string = (((data.F || 0) / total) * 100).toFixed(2);
 
   const handleOnSave = (symbol: string, d: any = data) => {
-    const total =
-      (d.top || 0) + (d.left || 0) + (d.right || 0) + (d.bottom || 0);
+    const total = (d.Q || 0) + (d.A || 0) + (d.P || 0) + (d.F || 0);
     if (total <= 1) {
       alert("Recheck the values. Total should be greater than 1.");
       return;
@@ -57,14 +57,14 @@ export default function QAPForm({ onSave, axisNames }: any) {
     const color = colorMap[symbol];
     onSave(
       {
-        top: d.top || 0,
-        left: d.left || 0,
-        right: d.right || 0,
-        bottom: d.bottom || 0,
+        Q: d.Q || 0,
+        A: d.A || 0,
+        P: d.P || 0,
+        F: d.F || 0,
       },
       color,
     );
-    setData({ top: 0, left: 0, right: 0, bottom: 0 });
+    setData({ Q: 0, A: 0, P: 0, F: 0 });
   };
   const handleRandom = (doSetData: boolean = true) => {
     const random = Math.floor(Math.random() * 100);
@@ -73,12 +73,16 @@ export default function QAPForm({ onSave, axisNames }: any) {
 
     let obj;
     if (nAxis === 3) {
-      obj = { top: random, left: random2, right: random3, bottom: 0 };
+      if (isFAP) {
+        obj = { Q: 0, A: random2, P: random3, F: random };
+      } else {
+        obj = { Q: random, A: random2, P: random3, F: 0 };
+      }
     } else {
       if (Math.random() > 0.5) {
-        obj = { top: random, left: random2, right: random3, bottom: 0 };
+        obj = { Q: random, A: random2, P: random3, F: 0 };
       } else {
-        obj = { top: 0, left: random2, right: random3, bottom: random };
+        obj = { Q: 0, A: random2, P: random3, F: random };
       }
     }
     if (doSetData) {
@@ -87,45 +91,54 @@ export default function QAPForm({ onSave, axisNames }: any) {
     return obj;
   };
 
+  let caption;
+  if (!isFAP) {
+    caption = `Total=${total.toFixed(2)} Q=${Q}% A=${A}% P=${P}%`;
+    if (nAxis === 4) {
+      caption = `Total=${total.toFixed(2)} Q=${Q}% A=${A}% P=${P}% F=${F}%`;
+    }
+  } else {
+    caption = `Total=${total.toFixed(2)} F=${F}% A=${A}% P=${P}%`;
+  }
+
   return (
     <div className="flex flex-col space-y-5 bg-gray-50 py-3 px-2 shadow">
       <div className="flex flex-col">
-        {nAxis === 3 ? (
-          <div className="text-gray-400 text-[0.5rem]">
-            Total={total} {axisNames[0]}={top}% {axisNames[1]}={left}%{" "}
-            {axisNames[2]}={right}%
-          </div>
-        ) : (
-          <div className="text-gray-400 text-[0.5rem]">
-            Total={total} {axisNames[0]}={top}% {axisNames[1]}={left}%{" "}
-            {axisNames[2]}={right} {axisNames[3]}={bottom}%
-          </div>
-        )}
+        <div className="text-gray-400 text-[0.5rem]">{caption}</div>
 
         <div className="flex flex-row items-center">
-          <InputBox
-            label={axisNames[0]}
-            name="top"
-            value={data.top}
-            onChange={handleChange}
-          />
+          {isFAP ? (
+            <InputBox
+              label={axisNames[0]}
+              name="F"
+              value={data.F}
+              onChange={handleChange}
+            />
+          ) : (
+            <InputBox
+              label={axisNames[0]}
+              name="Q"
+              value={data.Q}
+              onChange={handleChange}
+            />
+          )}
           <InputBox
             label={axisNames[1]}
-            name="left"
-            value={data.left}
+            name="A"
+            value={data.A}
             onChange={handleChange}
           />
           <InputBox
             label={axisNames[2]}
-            name="right"
-            value={data.right}
+            name="P"
+            value={data.P}
             onChange={handleChange}
           />
           {nAxis === 4 && (
             <InputBox
               label={axisNames[3]}
-              name="bottom"
-              value={data.bottom}
+              name="F"
+              value={data.F}
               onChange={handleChange}
             />
           )}

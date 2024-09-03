@@ -12,6 +12,8 @@ const MyCard = ({ href, title, subtitle, desc }: any) => {
             width={imgSize}
             height={imgSize}
             alt={""}
+            priority={true}
+            className="w-auto"
           ></Image>
         </div>
         <div className=" flex flex-col space-y-1 pt-2 px-2">

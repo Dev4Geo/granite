@@ -7,10 +7,10 @@ export const colorMap: { [key: string]: string } = {
   Custom: "Custom",
 };
 export type MyDataType = {
-  top: number;
-  left: number;
-  right: number;
-  bottom: number;
+  Q: number;
+  A: number;
+  P: number;
+  F: number;
   symbol: symbolType;
 };
 
