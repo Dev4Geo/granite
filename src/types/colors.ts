@@ -11,6 +11,16 @@ export const colorTheme = {
     "#A6A6A6",
     "#D9D9D9",
     "#42CA67",
+    "#A6A6A6",
+    "#D9D9D9",
+    "#A6A6A6",
+    "#D9D9D9",
+    "#A6A6A6",
+    "#D9D9D9",
+    "#A6A6A6",
+    "#D9D9D9",
+    "#A6A6A6",
+    "#D9D9D9",
   ],
   earth: [
     "#7B3F00", // Earth Brown

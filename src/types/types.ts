@@ -34,6 +34,16 @@ export type canvasConfigType = {
     Q1: string;
     Trachyte: string;
     Latite: string;
+    F2: string;
+    "Phonolitic Foidite": string;
+    "Tephritic Foidite": string;
+    Phonolite: string;
+    "Tephritic Phonolite": string;
+    "Phonolitic Tephrite": string;
+    Tephrite: string;
+    F1: string;
+    "Foid-Bearing Trachyte": string;
+    "Foid-Bearing Latite": string;
   };
   xAlkali: number;
   yAlkali: number;
@@ -60,7 +70,7 @@ export type canvasConfigType = {
 };
 
 const theme = colorTheme.olivine;
-export type graphType = "vQAPF" | "vQAP";
+export type graphType = "vQAPF" | "vQAP" | "vFAP";
 
 export const defaultConfig: canvasConfigType = {
   ratio: 1,
@@ -80,6 +90,16 @@ export const defaultConfig: canvasConfigType = {
     Q1: theme[8],
     Trachyte: theme[9],
     Latite: theme[10],
+    F2: theme[11],
+    "Phonolitic Foidite": theme[12],
+    "Tephritic Foidite": theme[13],
+    Phonolite: theme[14],
+    "Tephritic Phonolite": theme[15],
+    "Phonolitic Tephrite": theme[16],
+    Tephrite: theme[17],
+    F1: theme[18],
+    "Foid-Bearing Trachyte": theme[19],
+    "Foid-Bearing Latite": theme[20],
   },
   xAlkali: 0,
   yAlkali: 0,
@@ -113,12 +133,12 @@ export const defaultConfigVQAPF = {
   axisNames: ["Q", "A", "P", "F"],
 };
 
-
 export const defaultConfigVFAP = {
-  fontSize: 70,
-  fontSizeAxisLabel: 65, // 10,20,35
-  fontSizeAxis: 85, // QAPF
-  xLegend: 115,
+  fontSize: 100, 
+  fontSizeAxis: 110, // FAP
+  fontSizeAxisLabel: 80, // 10,20,35
+
+  xLegend: 0,
   graphType: "vFAP",
   axisNames: ["F", "A", "P"],
 };

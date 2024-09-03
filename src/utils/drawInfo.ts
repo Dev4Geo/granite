@@ -77,6 +77,112 @@ export const VQAP = (obj: any) => {
     [35, 65, 0, 5, colors["Latite"], "Latite", 0, 28, obj.top_],
   ];
 };
+
+export const VFAP = (obj: any, andesite: string) => {
+  const colors = obj.config.colors;
+  const y = 30;
+  const y2 = 350;
+  return [
+    [0, 100, 90, 100, colors["F2"], "F2", 0, y, obj.top_],
+    [
+      0,
+      50,
+      60,
+      90,
+      colors["Phonolitic Foidite"],
+      "Phonolitic\nFoidite",
+      -50,
+      y2,
+      obj.top_,
+      0,
+      "center",
+    ],
+    [
+      100,
+      50,
+      60,
+      90,
+      colors["Tephritic Foidite"],
+      "Tephritic\nFoidite",
+      50,
+      y2,
+      obj.top_,
+      0,
+      "center",
+    ],
+    [
+      0,
+      10,
+      60,
+      10,
+      colors["Phonolite"],
+      "Phonolite",
+      25,
+      y,
+      obj.top_,
+      -1.172 + obj.config.rAlkali,
+    ],
+    [
+      50,
+      10,
+      60,
+      10,
+      colors["Tephritic Phonolite"],
+      "Tephritic\nPhonolite",
+      0,
+      y + 100,
+      obj.top_,
+    ],
+    [
+      50,
+      90,
+      60,
+      10,
+      colors["Phonolitic Tephrite"],
+      "Phonolitic\nTephrite",
+      0,
+      y + 100,
+      obj.top_,
+    ],
+    [
+      100,
+      90,
+      60,
+      10,
+      colors["Tephrite"],
+      "Tephrite",
+      -25,
+      y,
+      obj.top_,
+      1.172 - obj.config.rAlkali,
+    ],
+    [0, 10, 0, 10, colors["F1"], "F1", 0, y, obj.top_],
+    [
+      35,
+      10,
+      0,
+      10,
+      colors["Foid-Bearing Trachyte"],
+      "Foid-Bearing\nTrachyte",
+      0,
+      y,
+      obj.top_,
+    ],
+    [
+      35,
+      65,
+      0,
+      10,
+      colors["Foid-Bearing Latite"],
+      "Foid-Bearing\nLatite",
+      0,
+      y,
+      obj.top_,
+    ],
+    [100, 65, 0, 10, colors["Andesite"], andesite, 0, y, obj.top_],
+  ];
+};
+
 export const VQAP4 = (obj: any) => {
   const colors = obj.config.colors;
   return [
@@ -134,7 +240,7 @@ export const VQAPFGridLabel = (obj: any) => {
   const y2 = 54;
 
   const y3 = 92;
-  const y4 = 55
+  const y4 = 55;
   return [
     [10, 20, "10", 29, y, fontSize],
     [35, 20, "35", -34, y, fontSize],
@@ -188,4 +294,3 @@ export const VQAPFAxisCircle = (obj: any) => {
     [obj.top_.x, obj.top_.y, c],
   ];
 };
-

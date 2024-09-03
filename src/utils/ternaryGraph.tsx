@@ -2,6 +2,7 @@ import { canvasConfigType, graphType, symbolType } from "@/types/types";
 import {
   VQAP,
   VQAP4,
+  VFAP,
   VQAPGridLabel,
   VQAPAxisCircle,
   VQAPAxisLabel,
@@ -87,6 +88,14 @@ class TernaryGraph {
   drawVolcanicFAP(){
     this.drawTriangleFrame(this.left, this.top_, this.right);
     const draw = this.config.isShowGrid;
+    // mafic 35
+    const andesite =
+      this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
+    const data = VFAP(this, andesite);
+
+    data.forEach((d: any) => {
+      this.doFill.apply(this, d);
+    });
   }
 
   drawVolcanicQAPF() {
