@@ -7,6 +7,7 @@ import {
   canvasConfigType,
   defaultConfig,
   defaultConfigVQAPF,
+  defaultConfigVFAP,
   MyDataType,
   symbolType,
 } from "@/types/types";
@@ -20,8 +21,8 @@ import { colorTheme } from "@/types/colors";
 import MaficSlider from "@/components/graph/maficSlider";
 import MyFooter from "@/components/shared/myFooter";
 
-// const debug = true;
-const debug = false;
+const debug = true;
+// const debug = false;
 
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -46,7 +47,7 @@ const Graph = () => {
   const [canvasConfig, setCanvasConfig] =
     useState<canvasConfigType>(defaultConfig);
 
-  const draw = () => {
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const g = new TernaryGraph(canvas, canvasConfig);
@@ -56,10 +57,6 @@ const Graph = () => {
     data.forEach((d) => {
       g.plot(d.top, d.left, d.right, d.bottom, d.symbol as symbolType);
     });
-  };
-
-  useEffect(() => {
-    draw();
   }, [canvasRef, canvasConfig, data]);
 
   const handleSave = (QAP: any, symbol: any) => {
@@ -147,14 +144,13 @@ const Graph = () => {
 
   const bottomLogoSize = 30;
 
-  if (debug) {
-    useEffect(() => {
-      setCanvasConfig({
-        ...canvasConfig,
-        ...(defaultConfigVQAPF as canvasConfigType),
-      });
-    });
-  }
+  useEffect(() => {
+    if (!debug) return;
+    setCanvasConfig((p) => ({
+      ...p,
+      ...(defaultConfigVFAP as canvasConfigType),
+    }));
+  }, []);
 
   return (
     <div className="flex flex-col items-center text-gray-600 w-full">
