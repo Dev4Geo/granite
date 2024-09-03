@@ -27,7 +27,7 @@ const debug = true;
 
 const Graph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isShowSettings, setIsShowSettings] = useState(false );
+  const [isShowSettings, setIsShowSettings] = useState(false || debug);
   const [data, setData] = useState<MyDataType[]>([
     {
       Q: 20.11,
@@ -119,13 +119,13 @@ const Graph = () => {
         F2: theme[11],
         "Phonolitic Foidite": theme[12],
         "Tephritic Foidite": theme[13],
-        Phonolite: theme[14],
-        "Tephritic Phonolite": theme[15],
-        "Phonolitic Tephrite": theme[16],
-        Tephrite: theme[17],
-        F1: theme[18],
+        Tephrite: theme[14],
+        "Phonolitic Tephrite": theme[15],
+        "Tephritic Phonolite": theme[16],
+        Phonolite: theme[17],
+        "Foid-Bearing Latite": theme[18],
         "Foid-Bearing Trachyte": theme[19],
-        "Foid-Bearing Latite": theme[20],
+        F1: theme[20],
       },
     });
   };
@@ -157,6 +157,7 @@ const Graph = () => {
   const FLogoSize = 30;
 
   useEffect(() => {
+    return
     if (!debug) return;
     setCanvasConfig((p) => ({
       ...p,

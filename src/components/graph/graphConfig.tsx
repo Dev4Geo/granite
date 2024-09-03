@@ -68,6 +68,24 @@ const GraphConfig = ({
           </div>
           <div className="flex flex-col pl-3">
             <MySlider
+              title={`Text-Opacity [${canvasConfig.textOpacity}]`}
+              name="textOpacity"
+              min={0}
+              max={100}
+              step={1}
+              value={canvasConfig.textOpacity}
+              onChange={handleNumericValue}
+            />
+            <MySlider
+              title={`Opacity [${canvasConfig.opacity}]`}
+              name="opacity"
+              min={0}
+              max={100}
+              step={1}
+              value={canvasConfig.opacity}
+              onChange={handleNumericValue}
+            />
+            <MySlider
               title={`Plot-size [${canvasConfig.plotSize}]`}
               name="plotSize"
               min={5}

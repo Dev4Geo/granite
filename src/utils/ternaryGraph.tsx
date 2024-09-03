@@ -353,8 +353,9 @@ Q2. Quartz alkali feldspar trachyte
     fontSize = fontSize;
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = textAlign;
+    ctx.save()
+    ctx.globalAlpha = this.config.textOpacity/100;
     lines.forEach((line, index) => {
-      const oldColor = this.ctx.fillStyle;
       ctx.fillStyle = this.config.rockNameColor;
       if (rotatedText !== 0) {
         ctx.save();
@@ -365,8 +366,8 @@ Q2. Quartz alkali feldspar trachyte
       } else {
         ctx.fillText(line, centerX, startY + index * lineHeight);
       }
-      ctx.fillStyle = oldColor;
     });
+    ctx.restore();
   }
 
   getCenter(lists: number[][]) {
@@ -392,7 +393,7 @@ Q2. Quartz alkali feldspar trachyte
     const oldColor = this.ctx.fillStyle;
     const oldAlpha = this.ctx.globalAlpha;
     this.ctx.fillStyle = color;
-    this.ctx.globalAlpha = 0.5;
+    this.ctx.globalAlpha = this.config.opacity / 100;
     this.ctx.beginPath();
     this.ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) {
@@ -421,12 +422,17 @@ Q2. Quartz alkali feldspar trachyte
 
   drawPoint(point: number[], symbol: string, size = 5) {
     const [x, y] = point;
-    const oldColor = this.ctx.fillStyle;
+    this.ctx.save()
     this.ctx.beginPath();
     this.ctx.fillStyle = symbol;
     this.ctx.arc(x, y, size, 0, Math.PI * 2);
     this.ctx.fill();
-    this.ctx.fillStyle = oldColor;
+    // center smaller black circle 
+    this.ctx.beginPath();
+    this.ctx.fillStyle = "white";
+    this.ctx.arc(x, y, size / 3, 0, Math.PI * 2); 
+    this.ctx.fill();
+    this.ctx.restore();
   }
 
   getCoordinate(top: number, left: number, right: number, bottom: number) {
@@ -436,18 +442,14 @@ Q2. Quartz alkali feldspar trachyte
       Number(right) || 0,
       Number(bottom) || 0,
     ];
-     top = top > bottom ? top : bottom;
+    top = top > bottom ? top : bottom;
     const top_ = top > bottom ? this.top_ : this.bottom_;
     const sum = top + left + right;
     const ratioTop = top / sum;
     const ratioLeft = left / sum;
     const ratioRight = right / sum;
     const ratioX = ratioRight / (ratioLeft + ratioRight);
-    const [y, x1, x2] = this.drawLineParallelQ(
-      ratioTop * 100,
-      false,
-      top_,
-    );
+    const [y, x1, x2] = this.drawLineParallelQ(ratioTop * 100, false, top_);
     const x = x1 + (x2 - x1) * ratioX;
     return [x, y];
   }

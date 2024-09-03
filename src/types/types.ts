@@ -68,6 +68,8 @@ export type canvasConfigType = {
   graphType: graphType;
   plotSize: number;
   axisNames: string[];
+  textOpacity: number;
+  opacity: number;
 };
 
 const theme = colorTheme.olivine;
@@ -122,8 +124,10 @@ export const defaultConfig: canvasConfigType = {
   yLegend: 0,
   colorLegend: "#303030",
   graphType: "vQAP",
-  plotSize: 15,
+  plotSize: 25,
   axisNames: ["Q", "A", "P"],
+  textOpacity: 80,
+  opacity: 30,
 };
 
 export const defaultConfigVQAPF = {
