@@ -115,6 +115,16 @@ const Graph = () => {
         Q1: theme[8],
         Trachyte: theme[9],
         Latite: theme[10],
+        F2: theme[11],
+        "Phonolitic Foidite": theme[12],
+        "Tephritic Foidite": theme[13],
+        Phonolite: theme[14],
+        "Tephritic Phonolite": theme[15],
+        "Phonolitic Tephrite": theme[16],
+        Tephrite: theme[17],
+        F1: theme[18],
+        "Foid-Bearing Trachyte": theme[19],
+        "Foid-Bearing Latite": theme[20],
       },
     });
   };
@@ -266,6 +276,9 @@ const Graph = () => {
                 handleNumericValue={handleNumericValue}
                 handleToggle={handleToggle}
                 handleValue={handleValue}
+                onClose={() => {
+                  setIsShowSettings(false);
+                }}
               />
             )}
 

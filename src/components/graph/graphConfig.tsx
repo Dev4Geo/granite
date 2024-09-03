@@ -12,6 +12,7 @@ const GraphConfig = ({
   handleNumericValue,
   handleToggle,
   handleValue,
+  onClose,
 }: any) => {
   const keys = Object.keys(canvasConfig.colors);
   const themes = Object.keys(colorTheme);
@@ -145,7 +146,7 @@ const GraphConfig = ({
           {canvasConfig.isShowRockNames && (
             <MyColorInput
               title="Name"
-              name='rockNameColor'
+              name="rockNameColor"
               value={canvasConfig.rockNameColor}
               onChange={handleValue}
             />
@@ -187,7 +188,7 @@ const GraphConfig = ({
           <div className="grid grid-cols-4">
             {keys.map((k: string, ind: any) => (
               <MyColorInput
-                name='empty'
+                name="empty"
                 key={ind}
                 title={k}
                 value={canvasConfig.colors[`${k}`]}
@@ -197,6 +198,11 @@ const GraphConfig = ({
           </div>
         </div>
       )}
+      <div className="flex flex-row justify-end px-2 ">
+        <Button onClick={onClose} color="success" className="shadow text-gray-500 bg-gray-100">
+          Back to Plotter
+        </Button>
+      </div>
     </div>
   );
 };
