@@ -83,7 +83,7 @@ export const VFAP = (obj: any, andesite: string) => {
   const y = 30;
   const y2 = 350;
   return [
-    [0, 100, 90, 100, colors["F2"], "F2", 0, y, obj.top_],
+    [0, 100, 90, 100, colors["F2"], "F2", 0, y + 70, obj.top_],
     [
       0,
       50,
@@ -220,6 +220,23 @@ export const VQAP4 = (obj: any) => {
   ];
 };
 
+export const VFAPGridLabel = (obj: any) => {
+  const fontSize = obj.config.fontSizeAxisLabel;
+  const y = 110;
+  const y2 = 54;
+  const x = -105;
+  return [
+    [0, 10, "10", x, y2, fontSize],
+    [0, 60, "60", x, y2, fontSize],
+    [0, 90, "90", x, y2, fontSize],
+    [10, 0, "10", -60, y, fontSize],
+    [35, 0, "35", -60, y, fontSize],
+    [50, 0, "50", -60, y, fontSize],
+    [65, 0, "65", -30, y, fontSize],
+    [90, 0, "90", -30, y, fontSize],
+  ];
+};
+
 export const VQAPGridLabel = (obj: any) => {
   const fontSize = obj.config.fontSizeAxisLabel;
   const y = 19;
@@ -255,6 +272,15 @@ export const VQAPFGridLabel = (obj: any) => {
     [0, 10, "10", -90, y4, fontSize, obj.bottom_],
     [0, 60, "60", -90, y4, fontSize, obj.bottom_],
     [0, 90, "90", -90, y4, fontSize, obj.bottom_],
+  ];
+};
+
+export const VFAPAxisLabel = (obj: any) => {
+  const y = obj.h - 140;
+  return [
+    ["F", obj.w / 2 - 1, 140],
+    ["A", 140, y],
+    ["P", obj.w - 130, y],
   ];
 };
 

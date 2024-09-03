@@ -6,8 +6,10 @@ import {
   VQAPGridLabel,
   VQAPAxisCircle,
   VQAPAxisLabel,
+  VFAPAxisLabel,
   VQAPF,
   VQAPFGridLabel,
+  VFAPGridLabel,
   VQAPFAxisCircle,
   VQAPFAxisLabel,
 } from "./drawInfo";
@@ -81,11 +83,11 @@ class TernaryGraph {
       this.drawVolcanicQAPF();
     } else if (this.graphType === "vQAP") {
       this.drawVolcanicQAP();
-    }else if (this.graphType === "vFAP") {
+    } else if (this.graphType === "vFAP") {
       this.drawVolcanicFAP();
     }
   }
-  drawVolcanicFAP(){
+  drawVolcanicFAP() {
     this.drawTriangleFrame(this.left, this.top_, this.right);
     const draw = this.config.isShowGrid;
     // mafic 35
@@ -96,6 +98,33 @@ class TernaryGraph {
     data.forEach((d: any) => {
       this.doFill.apply(this, d);
     });
+    this.drawEdge(VFAPAxisLabel, VQAPAxisCircle);
+
+    const dm10 = this.drawLineParallelQ(10, draw);
+    const dm60 = this.drawLineParallelQ(60, draw);
+    const dm90 = this.drawLineParallelQ(90, draw);
+    this.drawLineParallelQ(0, false, this.bottom_);
+
+    this.drawVerticalQ(10, dm60, draw);
+    this.drawVerticalQ(50, dm90, draw, dm10);
+    this.drawVerticalQ(90, dm60, draw, dm10);
+    this.drawVerticalQ(35, dm10, draw);
+    this.drawVerticalQ(65, dm10, draw);
+
+    if (this.config.isShowGridLabel) {
+      const d = VFAPGridLabel(this);
+      d.forEach((d: any) => {
+        this.drawText({
+          horizontal: d[0] as number,
+          vertical: d[1] as number,
+          text: d[2] as string,
+          offsetX: d[3] as number,
+          offsetY: d[4] as number,
+          fontSize: d[5] as number,
+          top: d[6],
+        });
+      });
+    }
   }
 
   drawVolcanicQAPF() {
@@ -377,7 +406,7 @@ Q2. Quartz alkali feldspar trachyte
     left: number,
     right: number,
     bottom: number = 0,
-    symbol: symbolType = 'red',
+    symbol: symbolType = "red",
   ) {
     const p = this.getCoordinate(top, left, right, bottom);
     this.drawPoint(p, symbol, this.config.plotSize);
@@ -394,10 +423,15 @@ Q2. Quartz alkali feldspar trachyte
   }
 
   getCoordinate(Q: number, A: number, P: number, F: number) {
-    [Q, A, P, F] = [Number(Q)||0, Number(A)||0, Number(P)||0, Number(F)||0];
+    [Q, A, P, F] = [
+      Number(Q) || 0,
+      Number(A) || 0,
+      Number(P) || 0,
+      Number(F) || 0,
+    ];
     const top = Q > F ? Q : F;
     const top_ = Q > F ? this.top_ : this.bottom_;
-    console.log(Q>F?'top': 'bot')
+    console.log(Q > F ? "top" : "bot");
     const sum = top + A + P;
     const percentageTop = top / sum;
     const percentageA = A / sum;
