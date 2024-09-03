@@ -20,6 +20,7 @@ import MyButton from "@/components/shared/myButton";
 import { colorTheme } from "@/types/colors";
 import MaficSlider from "@/components/graph/maficSlider";
 import MyFooter from "@/components/shared/myFooter";
+import OvilineSlider from "@/components/graph/olivineSlider";
 
 const debug = true;
 // const debug = false;
@@ -189,10 +190,18 @@ const Graph = () => {
               {
                 // mafic slider
               }
-              <MaficSlider
-                canvasConfig={canvasConfig}
-                onChange={handleNumericValue}
-              />
+              <div className="flex flex-row space-x-4">
+                <MaficSlider
+                  canvasConfig={canvasConfig}
+                  onChange={handleNumericValue}
+                />
+                {canvasConfig.graphType !== "vQAP" && (
+                  <OvilineSlider
+                    canvasConfig={canvasConfig}
+                    onChange={handleNumericValue}
+                  />
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -222,6 +231,15 @@ const Graph = () => {
                 // graphType
               }
               <MyButton
+                title="QAPF"
+                onClick={() => {
+                  setCanvasConfig({
+                    ...canvasConfig,
+                    ...(defaultConfigVQAPF as canvasConfigType),
+                  });
+                }}
+              />
+              <MyButton
                 title="QAP"
                 onClick={() => {
                   setCanvasConfig({
@@ -231,11 +249,11 @@ const Graph = () => {
                 }}
               />
               <MyButton
-                title="QAPF"
+                title="FAP"
                 onClick={() => {
                   setCanvasConfig({
                     ...canvasConfig,
-                    ...(defaultConfigVQAPF as canvasConfigType),
+                    ...(defaultConfigVFAP as canvasConfigType),
                   });
                 }}
               />

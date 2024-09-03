@@ -49,6 +49,7 @@ export type canvasConfigType = {
   yAlkali: number;
   rAlkali: number;
   maficMineral: number;
+  olivineModal: number;
   // theme: 'earth'|'forest'|'desert'|'mountain'|'ocean'|'volcanic';
   isShowColors: boolean;
   isShowAxis: boolean;
@@ -105,6 +106,7 @@ export const defaultConfig: canvasConfigType = {
   yAlkali: 0,
   rAlkali: 0,
   maficMineral: 20,
+  olivineModal: 5,
   isShowColors: true,
   isShowAxis: true,
   isShowGrid: true,
@@ -134,7 +136,7 @@ export const defaultConfigVQAPF = {
 };
 
 export const defaultConfigVFAP = {
-  fontSize: 100, 
+  fontSize: 100,
   fontSizeAxis: 110, // FAP
   fontSizeAxisLabel: 80, // 10,20,35
 

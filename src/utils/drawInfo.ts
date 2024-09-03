@@ -1,22 +1,81 @@
-export const VQAPF = (obj: any, andesite: string) => {
+export const VQAPF = (obj: any, andesite: string, isBasaltic: boolean) => {
   const y = 20;
-  const andesiteColor = "#f0A1c0";
+  const colors = obj.config.colors;
+  const andesiteColor = colors["Andesite"];
   return [
-    [0, 10, 0, 10, "#f011f0", "F1", 0, y],
-    [10, 35, 0, 10, "#f0A1f0", "Foid-Bearing\nTrachyte", 0, y],
-    [35, 65, 0, 10, "#a0A1f0", "Foid-Bearing\nLatite", 0, y],
+    [0, 10, 0, 10, colors["F1"], "F1", 0, y],
+    [
+      10,
+      35,
+      0,
+      10,
+      colors["Foid-Bearing Trachyte"],
+      "Foid-Bearing\nTrachyte",
+      0,
+      y,
+    ],
+    [
+      35,
+      65,
+      0,
+      10,
+      colors["Foid-Bearing Latite"],
+      "Foid-Bearing\nLatite",
+      0,
+      y,
+    ],
     [65, 100, 0, 10, andesiteColor, "", 0, 0],
     [65, 100, 0, 20, andesiteColor, andesite, 28, 116, obj.top_],
-    [0, 10, 10, 60, "#a011f0", "Phonolite", -35, -25, obj.bottom_, 1.02],
-    [10, 50, 10, 60, "#a0A1f0", "Tephritic\nPhonolite", 5, -50],
-    [50, 90, 10, 60, "#c0A1c0", "Phonolitic\nBasanite", 5, -50],
-    [90, 100, 10, 60, "#a0A1c0", "Basanite", 34, 0, obj.bottom_, -1.0],
+    [
+      0,
+      10,
+      10,
+      60,
+      colors["Phonolite"],
+      "Phonolite",
+      -35,
+      -25,
+      obj.bottom_,
+      1.02,
+    ],
+    [
+      10,
+      50,
+      10,
+      60,
+      colors["Tephritic Phonolite"],
+      "Tephritic\nPhonolite",
+      5,
+      -50,
+    ],
+    [
+      50,
+      90,
+      10,
+      60,
+      colors["Phonolitic Tephrite"],
+      isBasaltic ? "Phonolitic\nBasanite" : "Phonolitic\nTephrite",
+      5,
+      -50,
+    ],
+    [
+      90,
+      100,
+      10,
+      60,
+      colors["Tephrite"],
+      isBasaltic ? "Basanite" : "Tephrite",
+      34,
+      0,
+      obj.bottom_,
+      -1.0,
+    ],
     [
       0,
       50,
       60,
       90,
-      "#a0A1c0",
+      colors["Phonolitic Foidite"],
       "Phonlitic\nFoidite",
       107,
       -36,
@@ -29,15 +88,15 @@ export const VQAPF = (obj: any, andesite: string) => {
       100,
       60,
       90,
-      "#f0A1c0",
-      "Basanitic\nFoidite",
+      colors["Tephritic Foidite"],
+      isBasaltic ? "Basanitic\nFoidite" : "Tephritic\nFoidite",
       -107,
       -36,
       obj.bottom_,
       0,
       "start",
     ],
-    [0, 100, 90, 100, "#f0A1c0", "F2", 2, -3],
+    [0, 100, 90, 100, colors["F2"], "F2", 2, -3],
   ];
 };
 
@@ -78,7 +137,7 @@ export const VQAP = (obj: any) => {
   ];
 };
 
-export const VFAP = (obj: any, andesite: string) => {
+export const VFAP = (obj: any, andesite: string, isBasaltic: boolean) => {
   const colors = obj.config.colors;
   const y = 30;
   const y2 = 350;
@@ -103,7 +162,7 @@ export const VFAP = (obj: any, andesite: string) => {
       60,
       90,
       colors["Tephritic Foidite"],
-      "Tephritic\nFoidite",
+      isBasaltic ? "Basanitic\nFoidite" : "Tephritic\nFoidite",
       50,
       y2,
       obj.top_,
@@ -139,7 +198,7 @@ export const VFAP = (obj: any, andesite: string) => {
       60,
       10,
       colors["Phonolitic Tephrite"],
-      "Phonolitic\nTephrite",
+      isBasaltic ? "Phonolitic\nBasanite" : "Phonolitic\nTephrite",
       0,
       y + 100,
       obj.top_,
@@ -150,7 +209,7 @@ export const VFAP = (obj: any, andesite: string) => {
       60,
       10,
       colors["Tephrite"],
-      "Tephrite",
+      isBasaltic ? "Basanite" : "Tephrite",
       -25,
       y,
       obj.top_,

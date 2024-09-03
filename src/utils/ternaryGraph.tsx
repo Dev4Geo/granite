@@ -93,7 +93,8 @@ class TernaryGraph {
     // mafic 35
     const andesite =
       this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
-    const data = VFAP(this, andesite);
+    const isBasaltic = this.config.olivineModal > 10;
+    const data = VFAP(this, andesite, isBasaltic);
 
     data.forEach((d: any) => {
       this.doFill.apply(this, d);
@@ -134,7 +135,9 @@ class TernaryGraph {
     // mafic 35
     const andesite =
       this.config.maficMineral < 35 ? "Andesite\n(M<35)" : "Basalt\n(M>35)";
-    const data = VQAPF(this, andesite);
+
+    const isBasaltic = this.config.olivineModal > 10;
+    const data = VQAPF(this, andesite, isBasaltic);
 
     data.forEach((d: any) => {
       this.doFill.apply(this, d);
