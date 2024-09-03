@@ -112,3 +112,13 @@ export const defaultConfigVQAPF = {
   graphType: "vQAPF",
   axisNames: ["Q", "A", "P", "F"],
 };
+
+
+export const defaultConfigVFAP = {
+  fontSize: 70,
+  fontSizeAxisLabel: 65, // 10,20,35
+  fontSizeAxis: 85, // QAPF
+  xLegend: 115,
+  graphType: "vFAP",
+  axisNames: ["F", "A", "P"],
+};

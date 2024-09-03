@@ -80,8 +80,15 @@ class TernaryGraph {
       this.drawVolcanicQAPF();
     } else if (this.graphType === "vQAP") {
       this.drawVolcanicQAP();
+    }else if (this.graphType === "vFAP") {
+      this.drawVolcanicFAP();
     }
   }
+  drawVolcanicFAP(){
+    this.drawTriangleFrame(this.left, this.top_, this.right);
+    const draw = this.config.isShowGrid;
+  }
+
   drawVolcanicQAPF() {
     this.drawTriangleFrame(this.left, this.top_, this.right, this.bottom_);
     const draw = this.config.isShowGrid;

@@ -4,13 +4,14 @@ type MyMenuProps = {
   title: string;
   href: string;
   current?: string;
+  target?: string;
 };
 
-function MenuItem({ title, href, current }: MyMenuProps) {
+function MenuItem({ title, href, current, target }: MyMenuProps) {
   const isFocus = title === current;
   return (
     //
-    <Link href={href}>
+    <Link href={href} target={target}>
       <div className={`${isFocus && "underline"}`}>{title}</div>
     </Link>
   );
@@ -21,7 +22,7 @@ const MyMenu = ({current }:{current:string}) => {
     <div className="flex flex-row justify-end w-full my-2 px-2 text-sm text-gray-400 space-x-4 mr-4 z-0">
       <MenuItem title={"Charts"} href={"/charts"} current={current}/>
       <MenuItem title={"Alt-solutions"} href={"/alt-solutions"} current={current}/>
-      <MenuItem title={"Contact"} href={"https://github.com/Dev4Geo/Dev4Geo/blob/main/contact.md"} current={current}/>
+      <MenuItem title={"Contact"} href={"https://github.com/Dev4Geo/Dev4Geo/blob/main/contact.md"} current={current} target="_blank"/>
     </div>
   );
 };
